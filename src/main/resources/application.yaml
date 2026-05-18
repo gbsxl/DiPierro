@@ -1,3 +1,13 @@
 spring:
   application:
     name: Pierro
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/app
+    username: postgres
+    password: postgres
+  flyway:
+    enabled: true
+  jpa:
+    show-sql: on
