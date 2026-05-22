@@ -3,8 +3,8 @@ package Di.Pierro.infrastructure.persistence.person;
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Person;
-import Di.Pierro.infrastructure.entity.ActorEntity;
-import Di.Pierro.infrastructure.entity.PersonEntity;
+import Di.Pierro.infrastructure.persistence.entity.ActorEntity;
+import Di.Pierro.infrastructure.persistence.entity.PersonEntity;
 import Di.Pierro.infrastructure.persistence.actor.ActorRepositoryAdapter;
 import org.springframework.stereotype.Component;
 

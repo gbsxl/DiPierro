@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class PersonConfig {
 
     @Bean
-    public Di.Pierro.application.port.input.person.CreatePersonUseCase createPersonUseCase(PersonRepository personRepository){
+    public CreatePersonUseCase createPersonUseCase(PersonRepository personRepository){
         return new CreatePersonUseCase(personRepository);
     }
 
     @Bean
-    public Di.Pierro.application.port.input.person.FindPersonByIdUseCase findPersonByIdUseCase(PersonRepository personRepository){
+    public FindPersonByIdUseCase findPersonByIdUseCase(PersonRepository personRepository){
         return new FindPersonByIdUseCase(personRepository);
     }
 
     @Bean
-    public Di.Pierro.application.port.input.person.FindAllPersonsUseCase findAllPersonsUseCase(PersonRepository personRepository){
+    public FindAllPersonsUseCase findAllPersonsUseCase(PersonRepository personRepository){
         return new FindAllPersonsUseCase(personRepository);
     }
 

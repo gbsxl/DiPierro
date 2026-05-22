@@ -1,4 +1,4 @@
-package Di.Pierro.infrastructure.entity;
+package Di.Pierro.infrastructure.persistence.entity;
 
 import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.enums.Gender;

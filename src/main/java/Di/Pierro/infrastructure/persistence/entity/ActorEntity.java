@@ -1,4 +1,4 @@
-package Di.Pierro.infrastructure.entity;
+package Di.Pierro.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

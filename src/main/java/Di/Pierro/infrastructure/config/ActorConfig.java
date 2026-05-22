@@ -10,17 +10,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ActorConfig {
     @Bean
-    public Di.Pierro.application.port.input.actor.CreateActorUseCase createActorUseCase(ActorRepository actorRepository) {
+    public CreateActorUseCase createActorUseCase(ActorRepository actorRepository) {
         return new CreateActorUseCase(actorRepository);
     }
 
     @Bean
-    public Di.Pierro.application.port.input.actor.FindActorByIdUseCase findActorByIdUseCase(ActorRepository actorRepository){
+    public FindActorByIdUseCase findActorByIdUseCase(ActorRepository actorRepository){
         return new FindActorByIdUseCase(actorRepository);
     }
 
     @Bean
-    public Di.Pierro.application.port.input.actor.FindAllActorsUseCase findAllActorsUseCase(ActorRepository actorRepository){
+    public FindAllActorsUseCase findAllActorsUseCase(ActorRepository actorRepository){
         return new FindAllActorsUseCase(actorRepository);
     }
 
