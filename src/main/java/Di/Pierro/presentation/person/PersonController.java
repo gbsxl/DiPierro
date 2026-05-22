@@ -1,9 +1,9 @@
 package Di.Pierro.presentation.person;
 
-import Di.Pierro.application.port.input.person.CreatePersonUseCase;
-import Di.Pierro.application.port.input.person.FindAllPersonsUseCase;
-import Di.Pierro.application.port.input.person.FindPersonByIdUseCase;
 import Di.Pierro.application.dto.person.CreatePersonInput;
+import Di.Pierro.application.usecase.person.CreatePersonUseCase;
+import Di.Pierro.application.usecase.person.GetPersonByIdUseCase;
+import Di.Pierro.application.usecase.person.SearchPersonUseCase;
 import Di.Pierro.domain.model.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ import java.util.UUID;
 @RequestMapping("/person")
 public class PersonController {
     CreatePersonUseCase createPersonUseCase;
-    FindAllPersonsUseCase findAllPersonsUseCase;
-    FindPersonByIdUseCase findPersonByIdUseCase;
+    SearchPersonUseCase searchPersonUseCase;
+    GetPersonByIdUseCase getPersonByIdUseCase;
 
-    public PersonController(CreatePersonUseCase createPersonUseCase, FindAllPersonsUseCase findAllPersonsUseCase, FindPersonByIdUseCase findPersonByIdUseCase) {
+    public PersonController(CreatePersonUseCase createPersonUseCase, SearchPersonUseCase searchPersonUseCase, GetPersonByIdUseCase getPersonByIdUseCase) {
         this.createPersonUseCase = createPersonUseCase;
-        this.findAllPersonsUseCase = findAllPersonsUseCase;
-        this.findPersonByIdUseCase = findPersonByIdUseCase;
+        this.searchPersonUseCase = searchPersonUseCase;
+        this.getPersonByIdUseCase = getPersonByIdUseCase;
     }
 
     @PostMapping
@@ -42,7 +42,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonFoundResponse> findById(@PathVariable UUID id){
-        Optional<Person> optionalPerson = findPersonByIdUseCase.execute(id);
+        Optional<Person> optionalPerson = getPersonByIdUseCase.execute(id);
         return optionalPerson.map( person -> ResponseEntity.ok(new PersonFoundResponse(
                 person.getId(),
                 person.getCompleteName(),
@@ -57,7 +57,7 @@ public class PersonController {
     @GetMapping
     public ResponseEntity<List<PersonFoundResponse>> findAll(){
         return ResponseEntity.ok(
-                findAllPersonsUseCase.execute()
+                searchPersonUseCase.execute()
                         .stream()
                         .map(
                         person -> new PersonFoundResponse(

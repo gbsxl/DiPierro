@@ -1,8 +1,8 @@
 package Di.Pierro.presentation.actor;
 
-import Di.Pierro.application.port.input.actor.CreateActorUseCase;
-import Di.Pierro.application.port.input.actor.FindActorByIdUseCase;
-import Di.Pierro.application.port.input.actor.FindAllActorsUseCase;
+import Di.Pierro.application.usecase.actor.CreateActorUseCase;
+import Di.Pierro.application.usecase.actor.GetActorByIdUseCase;
+import Di.Pierro.application.usecase.actor.SearchActorUseCase;
 import Di.Pierro.domain.model.Actor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,13 @@ import java.util.UUID;
 @RequestMapping("/actor")
 public class ActorController {
     private final CreateActorUseCase createActorUseCase;
-    private final FindAllActorsUseCase findAllActorsUseCase;
-    private final FindActorByIdUseCase findActorByIdUseCase;
+    private final SearchActorUseCase searchActorUseCase;
+    private final GetActorByIdUseCase getActorByIdUseCase;
 
-    public ActorController(CreateActorUseCase createActorUseCase, FindAllActorsUseCase findAllActorsUseCase,
-            FindActorByIdUseCase findActorByIdUseCase) {
+    public ActorController(CreateActorUseCase createActorUseCase, SearchActorUseCase searchActorUseCase, GetActorByIdUseCase getActorByIdUseCase) {
         this.createActorUseCase = createActorUseCase;
-        this.findAllActorsUseCase = findAllActorsUseCase;
-        this.findActorByIdUseCase = findActorByIdUseCase;
+        this.searchActorUseCase = searchActorUseCase;
+        this.getActorByIdUseCase = getActorByIdUseCase;
     }
 
     @PostMapping
@@ -35,7 +34,7 @@ public class ActorController {
     @GetMapping
     public ResponseEntity<List<ActorFoundResponse>> findAll() {
         return ResponseEntity.ok(
-                findAllActorsUseCase.execute()
+                searchActorUseCase.execute()
                         .stream()
                         .map(
                                 actor -> new ActorFoundResponse(
@@ -49,7 +48,7 @@ public class ActorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ActorFoundResponse> findById(@PathVariable UUID id) {
-        Optional<Actor> actorOptional = findActorByIdUseCase.execute(id);
+        Optional<Actor> actorOptional = getActorByIdUseCase.execute(id);
         return actorOptional.map(actor -> ResponseEntity.ok(new ActorFoundResponse(
                 actor.getId(),
                 actor.getAddress(),
