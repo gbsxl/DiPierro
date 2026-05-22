@@ -1,7 +1,7 @@
-package Di.Pierro.application.useCases;
+package Di.Pierro.application.useCases.actor;
 
-import Di.Pierro.application.port.input.FindAllActorsUseCase;
-import Di.Pierro.application.port.output.ActorRepository;
+import Di.Pierro.application.port.input.actor.FindAllActorsUseCase;
+import Di.Pierro.application.port.output.actor.ActorRepository;
 import Di.Pierro.domain.entity.Actor;
 import java.util.List;
 

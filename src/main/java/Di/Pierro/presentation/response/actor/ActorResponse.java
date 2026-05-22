@@ -1,4 +1,4 @@
-package Di.Pierro.presentation.response;
+package Di.Pierro.presentation.response.actor;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;

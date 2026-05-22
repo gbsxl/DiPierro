@@ -1,7 +1,7 @@
-package Di.Pierro.application.useCases;
+package Di.Pierro.application.useCases.actor;
 
-import Di.Pierro.application.port.input.FindActorByIdUseCase;
-import Di.Pierro.application.port.output.ActorRepository;
+import Di.Pierro.application.port.input.actor.FindActorByIdUseCase;
+import Di.Pierro.application.port.output.actor.ActorRepository;
 import Di.Pierro.domain.entity.Actor;
 import java.util.Optional;
 import java.util.UUID;

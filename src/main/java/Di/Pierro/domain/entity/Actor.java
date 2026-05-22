@@ -27,6 +27,14 @@ public class Actor{
         this.isActive = isActive;
     }
 
+    public Actor() {
+        this.id = null;
+        this.address = null;
+        this.createdAt = null;
+        this.updatedAt = null;
+        this.isActive = true;
+    }
+
     public UUID getId() {
         return id;
     }

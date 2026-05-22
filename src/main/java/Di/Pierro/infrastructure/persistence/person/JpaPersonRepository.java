@@ -1,0 +1,11 @@
+package Di.Pierro.infrastructure.persistence.person;
+
+import Di.Pierro.infrastructure.entity.PersonEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface JpaPersonRepository extends JpaRepository<PersonEntity, UUID> {
+}

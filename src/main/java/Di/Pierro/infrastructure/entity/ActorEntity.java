@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Entity(name = "actors")
+@Entity
+@Table(name = "actors")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

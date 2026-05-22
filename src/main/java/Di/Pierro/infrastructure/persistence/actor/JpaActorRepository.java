@@ -1,4 +1,4 @@
-package Di.Pierro.infrastructure.persistence;
+package Di.Pierro.infrastructure.persistence.actor;
 
 import Di.Pierro.infrastructure.entity.ActorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

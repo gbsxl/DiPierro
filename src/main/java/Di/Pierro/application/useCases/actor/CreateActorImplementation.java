@@ -1,6 +1,6 @@
-package Di.Pierro.application.useCases;
-import Di.Pierro.application.port.input.CreateActorUseCase;
-import Di.Pierro.application.port.output.ActorRepository;
+package Di.Pierro.application.useCases.actor;
+import Di.Pierro.application.port.input.actor.CreateActorUseCase;
+import Di.Pierro.application.port.output.actor.ActorRepository;
 import Di.Pierro.domain.entity.Actor;
 
 public class CreateActorImplementation implements CreateActorUseCase {

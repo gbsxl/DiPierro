@@ -1,4 +1,4 @@
-package Di.Pierro.application.port.input;
+package Di.Pierro.application.port.input.actor;
 
 import Di.Pierro.domain.entity.Actor;
 
