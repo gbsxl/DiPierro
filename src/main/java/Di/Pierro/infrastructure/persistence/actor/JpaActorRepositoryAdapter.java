@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class ActorRepositoryAdapter implements ActorRepository {
+public class JpaActorRepositoryAdapter implements ActorRepository {
 
     private final JpaActorRepository jpaActorRepository;
 
-    public ActorRepositoryAdapter(JpaActorRepository jpaActorRepository) {
+    public JpaActorRepositoryAdapter(JpaActorRepository jpaActorRepository) {
         this.jpaActorRepository = jpaActorRepository;
     }
 
@@ -31,7 +31,7 @@ public class ActorRepositoryAdapter implements ActorRepository {
     }
 
     @Override
-    public List<Actor> getActors() {
+    public List<Actor> findAll() {
         return jpaActorRepository
                 .findAll()
                 .stream()
@@ -45,7 +45,7 @@ public class ActorRepositoryAdapter implements ActorRepository {
     }
 
     @Override
-    public Optional<Actor> getActorById(UUID id) {
+    public Optional<Actor> findById(UUID id) {
         return jpaActorRepository.findById(id).map(
                 actorEntity -> new Actor(
                         actorEntity.getId(),

@@ -5,7 +5,7 @@ import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Person;
 import Di.Pierro.infrastructure.persistence.entity.ActorEntity;
 import Di.Pierro.infrastructure.persistence.entity.PersonEntity;
-import Di.Pierro.infrastructure.persistence.actor.ActorRepositoryAdapter;
+import Di.Pierro.infrastructure.persistence.actor.JpaActorRepositoryAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,18 +13,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class PersonRepositoryAdapter implements PersonRepository {
-    ActorRepositoryAdapter actorRepositoryAdapter;
+public class JpaPersonRepositoryAdapter implements PersonRepository {
+    JpaActorRepositoryAdapter actorRepositoryAdapter;
     JpaPersonRepository jpaPersonRepository;
 
-    public PersonRepositoryAdapter(ActorRepositoryAdapter actorRepositoryAdapter, JpaPersonRepository jpaPersonRepository) {
+    public JpaPersonRepositoryAdapter(JpaActorRepositoryAdapter actorRepositoryAdapter, JpaPersonRepository jpaPersonRepository) {
         this.actorRepositoryAdapter = actorRepositoryAdapter;
         this.jpaPersonRepository = jpaPersonRepository;
     }
 
     @Override
     public void save(Person person, UUID actorId) {
-        Optional<Actor> optionalActor = findActor(actorId);
+        Optional<Actor> optionalActor = findActorById(actorId);
         if(optionalActor.isPresent()){
             person.setActor(optionalActor.get());
 
@@ -51,7 +51,7 @@ public class PersonRepositoryAdapter implements PersonRepository {
     }
 
     @Override
-    public Optional<Person> findPersonById(UUID id) {
+    public Optional<Person> findById(UUID id) {
         return jpaPersonRepository.findById(id).map(
         personEntity ->
                 new Person(
@@ -73,7 +73,7 @@ public class PersonRepositoryAdapter implements PersonRepository {
     }
 
     @Override
-    public List<Person> findAllPersons() {
+    public List<Person> findAll() {
         return jpaPersonRepository
             .findAll()
             .stream()
@@ -95,8 +95,8 @@ public class PersonRepositoryAdapter implements PersonRepository {
                 )
         ).toList();
     }
-    private Optional<Actor> findActor(UUID id){
-        return actorRepositoryAdapter.getActorById(id);
+    private Optional<Actor> findActorById(UUID id){
+        return actorRepositoryAdapter.findById(id);
     }
 
 }

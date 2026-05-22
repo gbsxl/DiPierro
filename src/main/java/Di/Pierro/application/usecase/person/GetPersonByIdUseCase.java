@@ -3,17 +3,18 @@ package Di.Pierro.application.usecase.person;
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.domain.model.Person;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public class FindAllPersonsUseCase {
+public class GetPersonByIdUseCase {
 
     PersonRepository personRepository;
 
-    public FindAllPersonsUseCase(PersonRepository personRepository) {
+    public GetPersonByIdUseCase(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
-    public List<Person> execute() {
-        return personRepository.findAllPersons();
+    public Optional<Person> execute(UUID id) {
+        return personRepository.findById(id);
     }
 }

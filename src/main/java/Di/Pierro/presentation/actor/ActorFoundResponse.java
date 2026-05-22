@@ -1,9 +1,9 @@
-package Di.Pierro.presentation.response.actor;
+package Di.Pierro.presentation.actor;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record ActorResponse(
+public record ActorFoundResponse(
         UUID id,
         String address,
         OffsetDateTime createdAt,

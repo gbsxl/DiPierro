@@ -2,26 +2,26 @@ package Di.Pierro.infrastructure.config;
 
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.application.usecase.actor.CreateActorUseCase;
-import Di.Pierro.application.usecase.actor.FindActorByIdUseCase;
-import Di.Pierro.application.usecase.actor.FindAllActorsUseCase;
+import Di.Pierro.application.usecase.actor.GetActorByIdUseCase;
+import Di.Pierro.application.usecase.actor.SearchActorUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ActorConfig {
+public class ActorBeanConfig {
     @Bean
     public CreateActorUseCase createActorUseCase(ActorRepository actorRepository) {
         return new CreateActorUseCase(actorRepository);
     }
 
     @Bean
-    public FindActorByIdUseCase findActorByIdUseCase(ActorRepository actorRepository){
-        return new FindActorByIdUseCase(actorRepository);
+    public GetActorByIdUseCase findActorByIdUseCase(ActorRepository actorRepository){
+        return new GetActorByIdUseCase(actorRepository);
     }
 
     @Bean
-    public FindAllActorsUseCase findAllActorsUseCase(ActorRepository actorRepository){
-        return new FindAllActorsUseCase(actorRepository);
+    public SearchActorUseCase findAllActorsUseCase(ActorRepository actorRepository){
+        return new SearchActorUseCase(actorRepository);
     }
 
 }
