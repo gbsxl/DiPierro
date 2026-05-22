@@ -1,6 +1,6 @@
 package Di.Pierro.infrastructure.persistence.actor;
 
-import Di.Pierro.application.port.output.actor.ActorRepository;
+import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.domain.model.Actor;
 import Di.Pierro.infrastructure.entity.ActorEntity;
 import org.springframework.stereotype.Component;

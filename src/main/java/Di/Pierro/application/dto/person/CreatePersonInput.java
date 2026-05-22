@@ -1,4 +1,4 @@
-package Di.Pierro.application.useCases.person;
+package Di.Pierro.application.dto.person;
 
 import Di.Pierro.domain.enums.Gender;
 

@@ -3,7 +3,7 @@ package Di.Pierro.presentation.controller.person;
 import Di.Pierro.application.port.input.person.CreatePersonUseCase;
 import Di.Pierro.application.port.input.person.FindAllPersonsUseCase;
 import Di.Pierro.application.port.input.person.FindPersonByIdUseCase;
-import Di.Pierro.application.useCases.person.CreatePersonInput;
+import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.domain.model.Person;
 import Di.Pierro.presentation.request.person.PersonRequest;
 import Di.Pierro.presentation.response.person.PersonResponse;

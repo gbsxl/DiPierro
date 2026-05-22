@@ -1,18 +1,17 @@
-package Di.Pierro.application.useCases.person;
+package Di.Pierro.application.usecase.person;
 
-import Di.Pierro.application.port.input.person.CreatePersonUseCase;
-import Di.Pierro.application.port.output.person.PersonRepository;
+import Di.Pierro.application.port.output.PersonRepository;
+import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.domain.model.Person;
 
-public class CreatePersonImplementation implements CreatePersonUseCase {
+public class CreatePersonUseCase {
 
     PersonRepository personRepository;
 
-    public CreatePersonImplementation(PersonRepository personRepository) {
+    public CreatePersonUseCase(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
-    @Override
     public void execute(CreatePersonInput personInput) {
         Person person = new Person(
                 personInput.completeName(),

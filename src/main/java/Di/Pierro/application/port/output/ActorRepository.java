@@ -1,4 +1,4 @@
-package Di.Pierro.application.port.output.actor;
+package Di.Pierro.application.port.output;
 
 import Di.Pierro.domain.model.Actor;
 import java.util.List;

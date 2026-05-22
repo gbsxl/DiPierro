@@ -1,4 +1,4 @@
-package Di.Pierro.application.port.output.person;
+package Di.Pierro.application.port.output;
 
 import Di.Pierro.domain.model.Person;
 
