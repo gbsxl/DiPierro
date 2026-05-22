@@ -1,17 +1,15 @@
-package Di.Pierro.presentation.response.person;
+package Di.Pierro.presentation.person;
 
-import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.enums.Gender;
 
 import java.util.UUID;
 
-public record PersonResponse(
-        UUID id,
+public record CreatePersonRequest(
         String completeName,
         String cpf,
         Gender gender,
         String phoneNumber,
         String email,
-        Actor actor
+        UUID actorId
 ) {
 }

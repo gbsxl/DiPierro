@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface PersonRepository {
     void save(Person person, UUID actorId);
-    Optional<Person> findPersonById(UUID id);
-    List<Person> findAllPersons();
+    Optional<Person> findById(UUID id);
+    List<Person> findAll();
 }

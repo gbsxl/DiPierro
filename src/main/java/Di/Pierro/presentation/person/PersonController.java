@@ -1,12 +1,10 @@
-package Di.Pierro.presentation.controller.person;
+package Di.Pierro.presentation.person;
 
 import Di.Pierro.application.port.input.person.CreatePersonUseCase;
 import Di.Pierro.application.port.input.person.FindAllPersonsUseCase;
 import Di.Pierro.application.port.input.person.FindPersonByIdUseCase;
 import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.domain.model.Person;
-import Di.Pierro.presentation.request.person.PersonRequest;
-import Di.Pierro.presentation.response.person.PersonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +27,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPerson(@RequestBody PersonRequest personRequest){
+    public ResponseEntity<Void> save(@RequestBody CreatePersonRequest personRequest){
         CreatePersonInput createPersonInput = new CreatePersonInput(
                 personRequest.completeName(),
                 personRequest.cpf(),
@@ -43,9 +41,9 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonResponse> getPersonById(@PathVariable UUID id){
+    public ResponseEntity<PersonFoundResponse> findById(@PathVariable UUID id){
         Optional<Person> optionalPerson = findPersonByIdUseCase.execute(id);
-        return optionalPerson.map( person -> ResponseEntity.ok(new PersonResponse(
+        return optionalPerson.map( person -> ResponseEntity.ok(new PersonFoundResponse(
                 person.getId(),
                 person.getCompleteName(),
                 person.getCpf(),
@@ -57,12 +55,12 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PersonResponse>> getAllPersons(){
+    public ResponseEntity<List<PersonFoundResponse>> findAll(){
         return ResponseEntity.ok(
                 findAllPersonsUseCase.execute()
                         .stream()
                         .map(
-                        person -> new PersonResponse(
+                        person -> new PersonFoundResponse(
                                 person.getId(),
                                 person.getCompleteName(),
                                 person.getCpf(),

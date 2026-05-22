@@ -2,16 +2,18 @@ package Di.Pierro.application.usecase.actor;
 
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.domain.model.Actor;
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public class FindAllActorsUseCase {
+public class GetActorByIdUseCase {
     private final ActorRepository actorRepository;
 
-    public FindAllActorsUseCase(ActorRepository actorRepository) {
+    public GetActorByIdUseCase(ActorRepository actorRepository) {
         this.actorRepository = actorRepository;
     }
 
-    public List<Actor> execute(){
-        return actorRepository.getActors();
+    public Optional<Actor> execute(UUID id){
+        return actorRepository.findById(id);
     }
+
 }

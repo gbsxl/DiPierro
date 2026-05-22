@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface ActorRepository {
     void save(Actor actor);
 
-    List<Actor> getActors();
+    List<Actor> findAll();
 
-    Optional<Actor> getActorById(UUID id);
+    Optional<Actor> findById(UUID id);
 }

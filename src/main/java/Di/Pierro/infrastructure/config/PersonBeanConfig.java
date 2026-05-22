@@ -2,13 +2,13 @@ package Di.Pierro.infrastructure.config;
 
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.application.usecase.person.CreatePersonUseCase;
-import Di.Pierro.application.usecase.person.FindAllPersonsUseCase;
-import Di.Pierro.application.usecase.person.FindPersonByIdUseCase;
+import Di.Pierro.application.usecase.person.SearchPersonUseCase;
+import Di.Pierro.application.usecase.person.GetPersonByIdUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PersonConfig {
+public class PersonBeanConfig {
 
     @Bean
     public CreatePersonUseCase createPersonUseCase(PersonRepository personRepository){
@@ -16,13 +16,13 @@ public class PersonConfig {
     }
 
     @Bean
-    public FindPersonByIdUseCase findPersonByIdUseCase(PersonRepository personRepository){
-        return new FindPersonByIdUseCase(personRepository);
+    public GetPersonByIdUseCase findPersonByIdUseCase(PersonRepository personRepository){
+        return new GetPersonByIdUseCase(personRepository);
     }
 
     @Bean
-    public FindAllPersonsUseCase findAllPersonsUseCase(PersonRepository personRepository){
-        return new FindAllPersonsUseCase(personRepository);
+    public SearchPersonUseCase findAllPersonsUseCase(PersonRepository personRepository){
+        return new SearchPersonUseCase(personRepository);
     }
 
 }
