@@ -2,7 +2,7 @@ package Di.Pierro.application.useCases.person;
 
 import Di.Pierro.application.port.input.person.CreatePersonUseCase;
 import Di.Pierro.application.port.output.person.PersonRepository;
-import Di.Pierro.domain.entity.Person;
+import Di.Pierro.domain.model.Person;
 
 public class CreatePersonImplementation implements CreatePersonUseCase {
 

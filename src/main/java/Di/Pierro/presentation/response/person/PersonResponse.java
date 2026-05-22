@@ -1,6 +1,6 @@
 package Di.Pierro.presentation.response.person;
 
-import Di.Pierro.domain.entity.Actor;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.enums.Gender;
 
 import java.util.UUID;

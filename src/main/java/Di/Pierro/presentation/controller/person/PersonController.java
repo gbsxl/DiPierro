@@ -4,7 +4,7 @@ import Di.Pierro.application.port.input.person.CreatePersonUseCase;
 import Di.Pierro.application.port.input.person.FindAllPersonsUseCase;
 import Di.Pierro.application.port.input.person.FindPersonByIdUseCase;
 import Di.Pierro.application.useCases.person.CreatePersonInput;
-import Di.Pierro.domain.entity.Person;
+import Di.Pierro.domain.model.Person;
 import Di.Pierro.presentation.request.person.PersonRequest;
 import Di.Pierro.presentation.response.person.PersonResponse;
 import org.springframework.http.HttpStatus;

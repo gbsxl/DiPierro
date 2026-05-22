@@ -3,7 +3,7 @@ package Di.Pierro.presentation.controller.actor;
 import Di.Pierro.application.port.input.actor.CreateActorUseCase;
 import Di.Pierro.application.port.input.actor.FindActorByIdUseCase;
 import Di.Pierro.application.port.input.actor.FindAllActorsUseCase;
-import Di.Pierro.domain.entity.Actor;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.presentation.request.actor.ActorRequest;
 import Di.Pierro.presentation.response.actor.ActorResponse;
 import org.springframework.http.HttpStatus;

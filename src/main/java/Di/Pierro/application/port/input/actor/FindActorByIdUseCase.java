@@ -1,6 +1,6 @@
 package Di.Pierro.application.port.input.actor;
 
-import Di.Pierro.domain.entity.Actor;
+import Di.Pierro.domain.model.Actor;
 
 import java.util.Optional;
 import java.util.UUID;

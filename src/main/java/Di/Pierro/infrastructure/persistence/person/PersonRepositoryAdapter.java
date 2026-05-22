@@ -1,8 +1,8 @@
 package Di.Pierro.infrastructure.persistence.person;
 
 import Di.Pierro.application.port.output.person.PersonRepository;
-import Di.Pierro.domain.entity.Actor;
-import Di.Pierro.domain.entity.Person;
+import Di.Pierro.domain.model.Actor;
+import Di.Pierro.domain.model.Person;
 import Di.Pierro.infrastructure.entity.ActorEntity;
 import Di.Pierro.infrastructure.entity.PersonEntity;
 import Di.Pierro.infrastructure.persistence.actor.ActorRepositoryAdapter;

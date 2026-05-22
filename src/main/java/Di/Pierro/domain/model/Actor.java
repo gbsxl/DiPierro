@@ -1,4 +1,4 @@
-package Di.Pierro.domain.entity;
+package Di.Pierro.domain.model;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

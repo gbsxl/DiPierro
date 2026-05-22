@@ -1,6 +1,6 @@
 package Di.Pierro.infrastructure.entity;
 
-import Di.Pierro.domain.entity.Actor;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;

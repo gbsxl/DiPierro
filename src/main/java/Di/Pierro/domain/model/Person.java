@@ -1,4 +1,4 @@
-package Di.Pierro.domain.entity;
+package Di.Pierro.domain.model;
 import Di.Pierro.domain.enums.Gender;
 
 import java.util.UUID;

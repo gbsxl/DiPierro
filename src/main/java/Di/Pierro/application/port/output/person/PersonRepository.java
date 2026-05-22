@@ -1,6 +1,6 @@
 package Di.Pierro.application.port.output.person;
 
-import Di.Pierro.domain.entity.Person;
+import Di.Pierro.domain.model.Person;
 
 import java.util.List;
 import java.util.Optional;
