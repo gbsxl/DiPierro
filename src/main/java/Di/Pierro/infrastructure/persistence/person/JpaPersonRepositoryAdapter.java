@@ -14,11 +14,11 @@ import java.util.UUID;
 
 @Component
 public class JpaPersonRepositoryAdapter implements PersonRepository {
-    JpaActorRepositoryAdapter actorRepositoryAdapter;
+    JpaActorRepositoryAdapter jpaActorRepositoryAdapter;
     JpaPersonRepository jpaPersonRepository;
 
     public JpaPersonRepositoryAdapter(JpaActorRepositoryAdapter actorRepositoryAdapter, JpaPersonRepository jpaPersonRepository) {
-        this.actorRepositoryAdapter = actorRepositoryAdapter;
+        this.jpaActorRepositoryAdapter = actorRepositoryAdapter;
         this.jpaPersonRepository = jpaPersonRepository;
     }
 
@@ -96,7 +96,7 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
         ).toList();
     }
     private Optional<Actor> findActorById(UUID id){
-        return actorRepositoryAdapter.findById(id);
+        return jpaActorRepositoryAdapter.findById(id);
     }
 
 }
