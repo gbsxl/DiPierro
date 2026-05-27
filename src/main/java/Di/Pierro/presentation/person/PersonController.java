@@ -27,49 +27,19 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreatePersonRequest personRequest){
-        CreatePersonInput createPersonInput = new CreatePersonInput(
-                personRequest.completeName(),
-                personRequest.cpf(),
-                personRequest.gender(),
-                personRequest.phoneNumber(),
-                personRequest.email(),
-                personRequest.actorId()
-        );
-        createPersonUseCase.execute(createPersonInput);
+    public ResponseEntity<Void> save(@RequestBody CreatePersonInput personInput){
+        createPersonUseCase.execute(personInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonFoundResponse> findById(@PathVariable UUID id){
+    public ResponseEntity<Person> findById(@PathVariable UUID id){
         Optional<Person> optionalPerson = getPersonByIdUseCase.execute(id);
-        return optionalPerson.map( person -> ResponseEntity.ok(new PersonFoundResponse(
-                person.getId(),
-                person.getCompleteName(),
-                person.getCpf(),
-                person.getGender(),
-                person.getPhoneNumber(),
-                person.getEmail(),
-                person.getActor()
-            ))).orElseGet(() -> ResponseEntity.notFound().build());
+        return optionalPerson.map( person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<PersonFoundResponse>> findAll(){
-        return ResponseEntity.ok(
-                searchPersonUseCase.execute()
-                        .stream()
-                        .map(
-                        person -> new PersonFoundResponse(
-                                person.getId(),
-                                person.getCompleteName(),
-                                person.getCpf(),
-                                person.getGender(),
-                                person.getPhoneNumber(),
-                                person.getEmail(),
-                                person.getActor()
-                        ))
-                        .toList()
-        );
+    public ResponseEntity<List<Person>> findAll(){
+        return ResponseEntity.ok(searchPersonUseCase.execute());
     }
 }

@@ -1,9 +1,7 @@
 package Di.Pierro.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -11,7 +9,9 @@ import java.util.UUID;
 @Table(name = "business")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@Builder
 public class BusinessEntity {
     @Id
     @Column(name = "id")

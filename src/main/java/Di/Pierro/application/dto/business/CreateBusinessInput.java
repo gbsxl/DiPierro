@@ -9,7 +9,7 @@ public record CreateBusinessInput(
         String phoneNumber,
         String email,
         boolean isPublicCompany,
-        UUID id
+        UUID actorId
 ) {
 
 }

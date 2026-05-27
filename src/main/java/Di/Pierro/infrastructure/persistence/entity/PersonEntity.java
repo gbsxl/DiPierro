@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class PersonEntity extends Actor {
     @Id
     @Column(name = "id")

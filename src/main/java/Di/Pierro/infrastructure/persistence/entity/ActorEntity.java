@@ -1,9 +1,7 @@
 package Di.Pierro.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -12,8 +10,10 @@ import java.util.UUID;
 @Table(name = "actors")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ActorEntity {
     @Id
     @Column(name = "id")
@@ -29,5 +29,5 @@ public class ActorEntity {
     private OffsetDateTime updatedAt;
 
     @Column(name = "is_active")
-    private boolean isActive;
+    private boolean active;
 }

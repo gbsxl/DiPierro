@@ -13,7 +13,7 @@ public class CreatePersonUseCase {
     }
 
     public void execute(CreatePersonInput personInput) {
-        Person person = new Person(
+        Person person = Person.createPerson(
                 personInput.completeName(),
                 personInput.cpf(),
                 personInput.gender(),

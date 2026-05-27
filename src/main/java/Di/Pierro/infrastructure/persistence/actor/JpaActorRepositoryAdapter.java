@@ -2,7 +2,9 @@ package Di.Pierro.infrastructure.persistence.actor;
 
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.domain.model.Actor;
+import Di.Pierro.infrastructure.mapper.ActorMapper;
 import Di.Pierro.infrastructure.persistence.entity.ActorEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,48 +12,25 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@AllArgsConstructor
 public class JpaActorRepositoryAdapter implements ActorRepository {
 
     private final JpaActorRepository jpaActorRepository;
-
-    public JpaActorRepositoryAdapter(JpaActorRepository jpaActorRepository) {
-        this.jpaActorRepository = jpaActorRepository;
-    }
+    private final ActorMapper actorMapper;
 
     @Override
     public void save(Actor actor) {
-        ActorEntity actorEntity = new ActorEntity(
-                actor.getId(),
-                actor.getAddress(),
-                actor.getCreatedAt(),
-                actor.getUpdatedAt(),
-                actor.isActive()
-        );
+        ActorEntity actorEntity = actorMapper.toEntity(actor);
         jpaActorRepository.save(actorEntity);
     }
 
     @Override
     public List<Actor> findAll() {
-        return jpaActorRepository
-                .findAll()
-                .stream()
-                .map(actorEntity -> new Actor(
-                        actorEntity.getId(),
-                        actorEntity.getAddress(),
-                        actorEntity.getCreatedAt(),
-                        actorEntity.getUpdatedAt(),
-                        actorEntity.isActive()))
-                .toList();
+        return jpaActorRepository.findAll().stream().map(actorMapper::toDomain).toList();
     }
 
     @Override
     public Optional<Actor> findById(UUID id) {
-        return jpaActorRepository.findById(id).map(
-                actorEntity -> new Actor(
-                        actorEntity.getId(),
-                        actorEntity.getAddress(),
-                        actorEntity.getCreatedAt(),
-                        actorEntity.getUpdatedAt(),
-                        actorEntity.isActive()));
+        return jpaActorRepository.findById(id).map(actorMapper::toDomain);
     }
 }

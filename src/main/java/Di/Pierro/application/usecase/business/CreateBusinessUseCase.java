@@ -11,14 +11,14 @@ public class CreateBusinessUseCase {
         this.businessRepository = businessRepository;
     }
     public void execute(CreateBusinessInput businessInput){
-         Business business = new Business(
-                 businessInput.legalName(),
-                 businessInput.cnpj(),
-                 businessInput.fantasyName(),
-                 businessInput.phoneNumber(),
-                 businessInput.email(),
-                 businessInput.isPublicCompany()
-         );
-        businessRepository.save(business, businessInput.id());
+        Business business = Business.createBusiness(
+                businessInput.legalName(),
+                businessInput.cnpj(),
+                businessInput.fantasyName(),
+                businessInput.phoneNumber(),
+                businessInput.email(),
+                businessInput.isPublicCompany()
+        );
+        businessRepository.save(business, businessInput.actorId());
     }
 }

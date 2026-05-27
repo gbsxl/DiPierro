@@ -1,5 +1,6 @@
 package Di.Pierro.presentation.actor;
 
+import Di.Pierro.application.dto.actor.CreateActorInput;
 import Di.Pierro.application.usecase.actor.CreateActorUseCase;
 import Di.Pierro.application.usecase.actor.GetActorByIdUseCase;
 import Di.Pierro.application.usecase.actor.SearchActorUseCase;
@@ -26,34 +27,19 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreateActorRequest actorRequest) {
-        createActorUseCase.execute(actorRequest.Address());
+    public ResponseEntity<Void> save(@RequestBody CreateActorInput actorInput) {
+        createActorUseCase.execute(actorInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ActorFoundResponse>> findAll() {
-        return ResponseEntity.ok(
-                searchActorUseCase.execute()
-                        .stream()
-                        .map(
-                                actor -> new ActorFoundResponse(
-                                        actor.getId(),
-                                        actor.getAddress(),
-                                        actor.getCreatedAt(),
-                                        actor.getUpdatedAt(),
-                                        actor.isActive()))
-                        .toList());
+    public ResponseEntity<List<Actor>> findAll() {
+        return ResponseEntity.ok(searchActorUseCase.execute());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ActorFoundResponse> findById(@PathVariable UUID id) {
+    public ResponseEntity<Actor> findById(@PathVariable UUID id) {
         Optional<Actor> actorOptional = getActorByIdUseCase.execute(id);
-        return actorOptional.map(actor -> ResponseEntity.ok(new ActorFoundResponse(
-                actor.getId(),
-                actor.getAddress(),
-                actor.getCreatedAt(),
-                actor.getUpdatedAt(),
-                actor.isActive()))).orElseGet(() -> ResponseEntity.notFound().build());
+        return actorOptional.map( person -> ResponseEntity.ok(actorOptional.get())).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
