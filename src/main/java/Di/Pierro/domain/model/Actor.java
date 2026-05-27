@@ -9,22 +9,24 @@ public class Actor{
     private String address;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
-    private boolean isActive;
+    private boolean active;
 
-    public Actor(String address) {
-        this.id = UUID.randomUUID();
-        this.address = address;
-        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.isActive = true;
+    public static Actor createActor(String address){
+        return new Actor(
+                UUID.randomUUID(),
+                address,
+                OffsetDateTime.now(ZoneOffset.UTC),
+                OffsetDateTime.now(ZoneOffset.UTC),
+                true
+        );
     }
 
-    public Actor(UUID id, String address, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean isActive) {
+    public Actor(UUID id, String address, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean active) {
         this.id = id;
         this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.isActive = isActive;
+        this.active = active;
     }
 
     public Actor() {
@@ -32,26 +34,46 @@ public class Actor{
         this.address = null;
         this.createdAt = null;
         this.updatedAt = null;
-        this.isActive = true;
+        this.active = true;
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public boolean isActive() {
-        return isActive;
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

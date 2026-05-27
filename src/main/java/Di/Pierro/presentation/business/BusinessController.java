@@ -5,6 +5,8 @@ import Di.Pierro.application.usecase.business.CreateBusinessUseCase;
 import Di.Pierro.application.usecase.business.GetBusinessByIdUseCase;
 import Di.Pierro.application.usecase.business.SearchBusinessUseCase;
 import Di.Pierro.domain.model.Business;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,7 @@ public class BusinessController {
     @PostMapping()
     public ResponseEntity<Void> save(@RequestBody CreateBusinessInput createBusinessInput){
         createBusinessUseCase.execute(createBusinessInput);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
