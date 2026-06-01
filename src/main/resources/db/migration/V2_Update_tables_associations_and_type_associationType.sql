@@ -14,7 +14,7 @@ create table people (
     phone_number varchar(20),
     email varchar(150),
     actors_id UUID UNIQUE NOT NULL,
-    constraint fk_actors
+    constraint fk_actors_people
         foreign key (actors_id) references actors(id) on delete cascade
 );
 
@@ -27,7 +27,7 @@ create table business (
     email varchar(150),
     is_public_company boolean default false,
     actors_id UUID UNIQUE NOT NULL,
-    constraint fk_actors
+    constraint fk_actors_business
         foreign key (actors_id) references actors(id) on delete cascade
 );
 
