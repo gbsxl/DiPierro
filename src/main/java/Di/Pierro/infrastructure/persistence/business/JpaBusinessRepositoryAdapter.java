@@ -1,12 +1,12 @@
 package Di.Pierro.infrastructure.persistence.business;
 
+import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.application.port.output.BusinessRepository;
 
 import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Business;
 
 import Di.Pierro.infrastructure.mapper.BusinessMapper;
-import Di.Pierro.infrastructure.persistence.actor.JpaActorRepositoryAdapter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class JpaBusinessRepositoryAdapter implements BusinessRepository {
 
     JpaBusinessRepository jpaBusinessRepository;
-    JpaActorRepositoryAdapter jpaActorRepositoryAdapter;
+    ActorRepository actorRepository;
     BusinessMapper businessMapper;
 
     @Override
@@ -46,7 +46,7 @@ public class JpaBusinessRepositoryAdapter implements BusinessRepository {
     }
 
     private Optional<Actor> findActorById(UUID id){
-        return jpaActorRepositoryAdapter.findById(id);
+        return actorRepository.findById(id);
     }
 
 }
