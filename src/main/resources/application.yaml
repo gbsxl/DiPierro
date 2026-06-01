@@ -11,3 +11,7 @@ spring:
     enabled: true
   jpa:
     show-sql: on
+    hibernate:
+      ddl-auto: create
+
+kind: Application
