@@ -3,6 +3,8 @@ package Di.Pierro.infrastructure.persistence.entity;
 import Di.Pierro.domain.enums.AssociationType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -19,8 +21,9 @@ public class AssociationEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "association_type", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, columnDefinition = "association_type")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private AssociationType associationType;
 
     @Column(name = "source")

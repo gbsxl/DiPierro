@@ -1,50 +1,68 @@
 package Di.Pierro.domain.enums;
 
 public enum AssociationType {
-    // ==========================================
-    // VÍNCULOS SOCIETÁRIOS E CORPORATIVOS
-    // Foco: Estruturas empresariais e controle
-    // ==========================================
-    SOCIO,
-    SOCIO_ADMINISTRADOR,
-    DIRETOR,
-    CONSELHEIRO,                  // Membro do conselho administrativo
-    REPRESENTANTE_LEGAL,
-    CONTROLADORA,                 // Empresa Holding que controla outra
-    SUBSIDIARIA,                  // Empresa controlada por uma Holding
 
     // ==========================================
-    // VÍNCULOS FAMILIARES (Rede de Laranjas)
-    // Foco: Ocultação de patrimônio próximo
+    // VÍNCULOS SOCIETÁRIOS E CORPORATIVOS
     // ==========================================
-    CONJUGE,
-    PAI_MAE,
-    FILHO_FILHA,
-    IRMAO_IRMA,
-    PARENTE_SECUNDARIO,           // Primos, tios, sobrinhos (afastados, mas úteis na malha)
+    SOCIO("Sócio"),
+    SOCIO_ADMINISTRADOR("Sócio Administrador"),
+    DIRETOR("Diretor"),
+    CONSELHEIRO("Conselheiro"),
+    REPRESENTANTE_LEGAL("Representante Legal"),
+    CONTROLADORA("Empresa Controladora"),
+    SUBSIDIARIA("Empresa Subsidiária"),
+
+    // ==========================================
+    // VÍNCULOS FAMILIARES
+    // ==========================================
+    CONJUGE("Cônjuge"),
+    PAI_MAE("Pai ou Mãe"),
+    FILHO_FILHA("Filho ou Filha"),
+    IRMAO_IRMA("Irmão ou Irmã"),
+    PARENTE_SECUNDARIO("Parente Secundário"),
 
     // ==========================================
     // VÍNCULOS TRABALHISTAS E FINANCEIROS
-    // Foco: Subordinação e dependência financeira
     // ==========================================
-    EMPREGADOR,
-    EMPREGADO,
-    PRESTADOR_SERVICO,            // Contratos PJ/Terceirizados
-    PROCURADOR,                   // ALERTA ALTO: Quem assina cheques em nome de outro
-    FIADOR,                       // Quem garante dívidas de terceiros
+    EMPREGADOR("Empregador"),
+    EMPREGADO("Empregado"),
+    PRESTADOR_SERVICO("Prestador de Serviço"),
+    PROCURADOR("Procurador"),
+    FIADOR("Fiador"),
 
     // ==========================================
-    // VÍNCULOS INDIRETOS / OSINT PURO
-    // Foco: Conexões ocultas e anomalias físicas
+    // VÍNCULOS INDIRETOS / OSINT
     // ==========================================
-    COMPARTILHA_ENDERECO,         // ALERTA ALTO: 5 empresas diferentes na mesma sala comercial
-    COMPARTILHA_CONTATO,          // Empresas de donos diferentes usando o mesmo telefone/contador
-    DOADOR_CAMPANHA,              // Vínculo financeiro eleitoral
-    ASSESSOR_POLITICO,            // Vínculo de subordinação em gabinete público
+    COMPARTILHA_ENDERECO("Compartilha Endereço"),
+    COMPARTILHA_CONTATO("Compartilha Contato"),
+    DOADOR_CAMPANHA("Doador de Campanha"),
+    ASSESSOR_POLITICO("Assessor Político"),
 
     // ==========================================
-    // VÍNCULO NÃO DEFINIDO
-    // Foco: mapear sem ter uma confirmação direta
+    // NÃO CLASSIFICADO
     // ==========================================
-    LIGACAO_SEM_CLASSIFICACAO
+    LIGACAO_SEM_CLASSIFICACAO("Ligação Sem Classificação");
+
+    private final String description;
+
+    AssociationType(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public static AssociationType fromCode(String code) {
+        if (code == null || code.isBlank()) {
+            return LIGACAO_SEM_CLASSIFICACAO;
+        }
+
+        try {
+            return AssociationType.valueOf(code.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return LIGACAO_SEM_CLASSIFICACAO;
+        }
+    }
 }

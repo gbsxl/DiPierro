@@ -2,6 +2,7 @@ package Di.Pierro.application.usecase.association;
 
 import Di.Pierro.application.dto.association.CreateAssociationInput;
 import Di.Pierro.application.port.output.AssociationRepository;
+import Di.Pierro.domain.enums.AssociationType;
 import Di.Pierro.domain.model.Association;
 
 public class CreateAssociationUseCase {
@@ -13,7 +14,7 @@ public class CreateAssociationUseCase {
 
     public void execute(CreateAssociationInput associationInput){
         Association association = Association.createAssociation(
-                associationInput.associationType(),
+                AssociationType.fromCode(associationInput.associationType()),
                 associationInput.source(),
                 associationInput.confidenceLevel(),
                 associationInput.associationEnded(),
