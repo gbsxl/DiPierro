@@ -9,9 +9,8 @@ spring:
     password: postgres
   flyway:
     enabled: true
+    clean-disabled: false
   jpa:
     show-sql: on
     hibernate:
-      ddl-auto: create
-
-kind: Application
+      ddl-auto: none
