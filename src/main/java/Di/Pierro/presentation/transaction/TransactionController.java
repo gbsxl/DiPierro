@@ -1,9 +1,7 @@
 package Di.Pierro.presentation.transaction;
 
 import Di.Pierro.application.dto.transaction.CreateTransactionInput;
-import Di.Pierro.application.usecase.transaction.CreateTransactionUseCase;
-import Di.Pierro.application.usecase.transaction.GetTransactionByIdUseCase;
-import Di.Pierro.application.usecase.transaction.SearchTransactionUseCase;
+import Di.Pierro.application.port.input.TransactionUseCases;
 import Di.Pierro.domain.model.Transaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,33 +14,28 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
-    CreateTransactionUseCase createTransactionUseCase;
-    GetTransactionByIdUseCase getTransactionByIdUseCase;
-    SearchTransactionUseCase searchTransactionUseCase;
+    private final TransactionUseCases transactionUseCases;
 
-    public TransactionController(CreateTransactionUseCase createTransactionUseCase, GetTransactionByIdUseCase getTransactionByIdUseCase, SearchTransactionUseCase searchTransactionUseCase) {
-        this.createTransactionUseCase = createTransactionUseCase;
-        this.getTransactionByIdUseCase = getTransactionByIdUseCase;
-        this.searchTransactionUseCase = searchTransactionUseCase;
+    public TransactionController(TransactionUseCases transactionUseCases) {
+        this.transactionUseCases = transactionUseCases;
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreateTransactionInput createTransactionInput){
-        createTransactionUseCase.execute(createTransactionInput);
+    public ResponseEntity<Void> save(@RequestBody CreateTransactionInput createTransactionInput) {
+        transactionUseCases.createTransaction(createTransactionInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> findById(@PathVariable UUID id){
-        Optional<Transaction> optionalTransaction = getTransactionByIdUseCase.execute(id);
+    public ResponseEntity<Transaction> findById(@PathVariable UUID id) {
+        Optional<Transaction> optionalTransaction = transactionUseCases.findById(id);
         return optionalTransaction.map(
-                Transaction-> ResponseEntity.ok(optionalTransaction.get())
-        ).orElseGet( () -> ResponseEntity.notFound().build());
+                transaction -> ResponseEntity.ok(optionalTransaction.get())
+        ).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Transaction>> findAll(){
-        return ResponseEntity.ok(searchTransactionUseCase.execute());
+    public ResponseEntity<List<Transaction>> findAll() {
+        return ResponseEntity.ok(transactionUseCases.findAll());
     }
-
 }

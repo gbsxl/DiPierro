@@ -1,9 +1,7 @@
 package Di.Pierro.presentation.person;
 
 import Di.Pierro.application.dto.person.CreatePersonInput;
-import Di.Pierro.application.usecase.person.CreatePersonUseCase;
-import Di.Pierro.application.usecase.person.GetPersonByIdUseCase;
-import Di.Pierro.application.usecase.person.SearchPersonUseCase;
+import Di.Pierro.application.port.input.PersonUseCases;
 import Di.Pierro.domain.model.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +14,26 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/person")
 public class PersonController {
-    CreatePersonUseCase createPersonUseCase;
-    SearchPersonUseCase searchPersonUseCase;
-    GetPersonByIdUseCase getPersonByIdUseCase;
+    private final PersonUseCases personUseCases;
 
-    public PersonController(CreatePersonUseCase createPersonUseCase, SearchPersonUseCase searchPersonUseCase, GetPersonByIdUseCase getPersonByIdUseCase) {
-        this.createPersonUseCase = createPersonUseCase;
-        this.searchPersonUseCase = searchPersonUseCase;
-        this.getPersonByIdUseCase = getPersonByIdUseCase;
+    public PersonController(PersonUseCases personUseCases) {
+        this.personUseCases = personUseCases;
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreatePersonInput personInput){
-        createPersonUseCase.execute(personInput);
+    public ResponseEntity<Void> save(@RequestBody CreatePersonInput personInput) {
+        personUseCases.createPerson(personInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Person> findById(@PathVariable UUID id){
-        Optional<Person> optionalPerson = getPersonByIdUseCase.execute(id);
-        return optionalPerson.map( person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Person> findById(@PathVariable UUID id) {
+        Optional<Person> optionalPerson = personUseCases.findById(id);
+        return optionalPerson.map(person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> findAll(){
-        return ResponseEntity.ok(searchPersonUseCase.execute());
+    public ResponseEntity<List<Person>> findAll() {
+        return ResponseEntity.ok(personUseCases.findAll());
     }
 }
