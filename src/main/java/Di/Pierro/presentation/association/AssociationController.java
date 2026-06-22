@@ -1,9 +1,7 @@
 package Di.Pierro.presentation.association;
 
 import Di.Pierro.application.dto.association.CreateAssociationInput;
-import Di.Pierro.application.usecase.association.CreateAssociationUseCase;
-import Di.Pierro.application.usecase.association.GetAssociationByIdUseCase;
-import Di.Pierro.application.usecase.association.SearchAssociationUseCase;
+import Di.Pierro.application.port.input.AssociationUseCases;
 import Di.Pierro.domain.model.Association;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,33 +14,28 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/association")
 public class AssociationController {
-    CreateAssociationUseCase createAssociationUseCase;
-    GetAssociationByIdUseCase getAssociationByIdUseCase;
-    SearchAssociationUseCase searchAssociationUseCase;
+    private final AssociationUseCases associationUseCases;
 
-    public AssociationController(CreateAssociationUseCase createAssociationUseCase, GetAssociationByIdUseCase getAssociationByIdUseCase, SearchAssociationUseCase searchAssociationUseCase) {
-        this.createAssociationUseCase = createAssociationUseCase;
-        this.getAssociationByIdUseCase = getAssociationByIdUseCase;
-        this.searchAssociationUseCase = searchAssociationUseCase;
+    public AssociationController(AssociationUseCases associationUseCases) {
+        this.associationUseCases = associationUseCases;
     }
 
     @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody CreateAssociationInput createAssociationInput){
-        createAssociationUseCase.execute(createAssociationInput);
+    public ResponseEntity<Void> save(@RequestBody CreateAssociationInput createAssociationInput) {
+        associationUseCases.createAssociation(createAssociationInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Association> findById(@PathVariable UUID id){
-        Optional<Association> optionalAssociation = getAssociationByIdUseCase.execute(id);
+    public ResponseEntity<Association> findById(@PathVariable UUID id) {
+        Optional<Association> optionalAssociation = associationUseCases.findById(id);
         return optionalAssociation.map(
-                association-> ResponseEntity.ok(optionalAssociation.get())
-        ).orElseGet( () -> ResponseEntity.notFound().build());
+                association -> ResponseEntity.ok(optionalAssociation.get())
+        ).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Association>> findAll(){
-        return ResponseEntity.ok(searchAssociationUseCase.execute());
+    public ResponseEntity<List<Association>> findAll() {
+        return ResponseEntity.ok(associationUseCases.findAll());
     }
-
 }
