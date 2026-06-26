@@ -6,24 +6,21 @@ import java.util.UUID;
 
 public class Actor{
     private UUID id;
-    private String address;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
     private boolean active;
 
-    public static Actor createActor(String address){
+    public static Actor createActor(){
         return new Actor(
                 UUID.randomUUID(),
-                address,
                 OffsetDateTime.now(ZoneOffset.UTC),
                 OffsetDateTime.now(ZoneOffset.UTC),
                 true
         );
     }
 
-    public Actor(UUID id, String address, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean active) {
+    public Actor(UUID id, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean active) {
         this.id = id;
-        this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.active = active;
@@ -31,7 +28,6 @@ public class Actor{
 
     public Actor() {
         this.id = null;
-        this.address = null;
         this.createdAt = null;
         this.updatedAt = null;
         this.active = true;
@@ -43,14 +39,6 @@ public class Actor{
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public OffsetDateTime getCreatedAt() {

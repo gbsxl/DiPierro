@@ -40,6 +40,18 @@ public enum AssociationType {
     ASSESSOR_POLITICO("Assessor Político"),
 
     // ==========================================
+    // VÍNCULOS INDIRETOS / OSINT
+    // ==========================================
+    PARTICIPOU_LICITACAO("Participou da licitação"),
+    RESPONSAVEL_TECNICO("Responsável Técnico"),
+    PREGOEIRO("Pregoeiro"),
+    HOMOLOGADOR("Homologador da licitação"),
+    AUTOR_ETP("Autor da ETP/TR"),
+    MEMBRO_EQUIPE_APOIO("Membro da Equipe de Apoio"),
+    VENCEDOR_LICITACAO("Vencedor da licitação"),
+    PARTICIPANTE_LICITACAO(""),
+
+    // ==========================================
     // NÃO CLASSIFICADO
     // ==========================================
     LIGACAO_SEM_CLASSIFICACAO("Ligação Sem Classificação");

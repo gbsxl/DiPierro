@@ -1,5 +1,6 @@
 package Di.Pierro.application.dto.business;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CreateBusinessInput(
@@ -9,6 +10,9 @@ public record CreateBusinessInput(
         String phoneNumber,
         String email,
         boolean isPublicCompany,
+        String address,
+        BigDecimal estimatedNetWorth,
+        BigDecimal capitalStock,
         UUID actorId
 ) {
 

@@ -7,6 +7,7 @@ import java.util.UUID;
 public record CreatePersonInput(
         String completeName,
         String cpf,
+        String address,
         Gender gender,
         String phoneNumber,
         String email,

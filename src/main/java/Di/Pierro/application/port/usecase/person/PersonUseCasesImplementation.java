@@ -21,6 +21,7 @@ public class PersonUseCasesImplementation implements PersonUseCases {
         Person person = Person.createPerson(
                 createPersonInput.completeName(),
                 createPersonInput.cpf(),
+                createPersonInput.address(),
                 createPersonInput.gender(),
                 createPersonInput.phoneNumber(),
                 createPersonInput.email()
