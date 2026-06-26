@@ -24,7 +24,10 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
                 createBusinessInput.fantasyName(),
                 createBusinessInput.phoneNumber(),
                 createBusinessInput.email(),
-                createBusinessInput.isPublicCompany()
+                createBusinessInput.isPublicCompany(),
+                createBusinessInput.address(),
+                createBusinessInput.estimatedNetWorth(),
+                createBusinessInput.estimatedNetWorth()
         );
         businessRepository.save(business, createBusinessInput.actorId());
     }

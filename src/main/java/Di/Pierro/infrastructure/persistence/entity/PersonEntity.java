@@ -1,7 +1,7 @@
 package Di.Pierro.infrastructure.persistence.entity;
 
-import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.enums.Gender;
+import Di.Pierro.domain.model.Actor;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +19,14 @@ public class PersonEntity extends Actor {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "complete_name", nullable = false, length = 70)
+    @Column(name = "complete_name", nullable = false, length = 255)
     private String completeName;
 
-    @Column(name = "cpf", nullable = false, length = 11, unique = true)
+    @Column(name = "cpf", length = 11, unique = true)
     private String cpf;
+
+    @Column(name = "address")
+    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", length = 20)

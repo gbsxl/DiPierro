@@ -1,6 +1,5 @@
 package Di.Pierro.application.port.usecase.actor;
 
-import Di.Pierro.application.dto.actor.CreateActorInput;
 import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.domain.model.Actor;
@@ -17,8 +16,8 @@ public class ActorUseCasesImplementation implements ActorUseCases {
     }
 
     @Override
-    public void createActor(CreateActorInput createActorInput) {
-        Actor actor = Actor.createActor(createActorInput.address());
+    public void createActor() {
+        Actor actor = Actor.createActor();
         actorRepository.save(actor);
     }
 

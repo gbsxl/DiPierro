@@ -1,5 +1,6 @@
 package Di.Pierro.domain.model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Business {
@@ -10,9 +11,12 @@ public class Business {
     String phoneNumber;
     String email;
     boolean publicCompany;
+    String address;
+    BigDecimal estimatedNetWorth;
+    BigDecimal capitalStock;
     Actor actor;
 
-    public static Business createBusiness(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany){
+    public static Business createBusiness(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock){
         return new Business(
                 UUID.randomUUID(),
                 legalName,
@@ -21,12 +25,15 @@ public class Business {
                 phoneNumber,
                 email,
                 publicCompany,
+                address,
+                estimatedNetWorth,
+                capitalStock,
                 new Actor()
         );
     }
 
 
-    public Business(UUID id, String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, Actor actor) {
+    public Business(UUID id, String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, Actor actor) {
         this.id = id;
         this.legalName = legalName;
         this.cnpj = cnpj;
@@ -34,6 +41,9 @@ public class Business {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.publicCompany = publicCompany;
+        this.address = address;
+        this.estimatedNetWorth = estimatedNetWorth;
+        this.capitalStock = capitalStock;
         this.actor = actor;
     }
 
@@ -99,5 +109,29 @@ public class Business {
 
     public void setActor(Actor actor) {
         this.actor = actor;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public BigDecimal getEstimatedNetWorth() {
+        return estimatedNetWorth;
+    }
+
+    public void setEstimatedNetWorth(BigDecimal estimatedNetWorth) {
+        this.estimatedNetWorth = estimatedNetWorth;
+    }
+
+    public BigDecimal getCapitalStock() {
+        return capitalStock;
+    }
+
+    public void setCapitalStock(BigDecimal capitalStock) {
+        this.capitalStock = capitalStock;
     }
 }

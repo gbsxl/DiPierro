@@ -19,9 +19,6 @@ public class ActorEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 

@@ -7,16 +7,18 @@ public class Person {
     private UUID id;
     private String completeName;
     private String cpf;
+    private String address;
     private Gender gender;
     private String phoneNumber;
     private String email;
     private Actor actor;
 
-    public static Person createPerson(String completeName, String cpf, Gender gender, String phoneNumber, String email){
+    public static Person createPerson(String completeName, String cpf, String address, Gender gender, String phoneNumber, String email){
         return new Person(
                 UUID.randomUUID(),
                 completeName,
                 cpf,
+                address,
                 gender,
                 phoneNumber,
                 email,
@@ -24,10 +26,11 @@ public class Person {
         );
     }
 
-    public Person(UUID id, String completeName, String cpf, Gender gender, String phoneNumber, String email, Actor actor) {
+    public Person(UUID id, String completeName, String cpf, String address, Gender gender, String phoneNumber, String email, Actor actor) {
         this.id = id;
         this.completeName = completeName;
         this.cpf = cpf;
+        this.address = address;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -88,5 +91,13 @@ public class Person {
 
     public void setActor(Actor actor) {
         this.actor = actor;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -1,6 +1,5 @@
 package Di.Pierro.presentation.actor;
 
-import Di.Pierro.application.dto.actor.CreateActorInput;
 import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.domain.model.Actor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,8 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreateActorInput actorInput) {
-        actorUseCases.createActor(actorInput);
+    public ResponseEntity<Void> save() {
+        actorUseCases.createActor();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
