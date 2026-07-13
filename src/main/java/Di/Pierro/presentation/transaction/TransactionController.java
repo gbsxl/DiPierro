@@ -3,6 +3,8 @@ package Di.Pierro.presentation.transaction;
 import Di.Pierro.application.dto.transaction.CreateTransactionInput;
 import Di.Pierro.application.port.input.TransactionUseCases;
 import Di.Pierro.domain.model.Transaction;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +23,13 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody CreateTransactionInput createTransactionInput) {
+    public ResponseEntity<Void> save(@RequestBody @Valid CreateTransactionInput createTransactionInput) {
         transactionUseCases.createTransaction(createTransactionInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> findById(@PathVariable UUID id) {
+    public ResponseEntity<Transaction> findById(@PathVariable @NotNull UUID id) {
         Optional<Transaction> optionalTransaction = transactionUseCases.findById(id);
         return optionalTransaction.map(
                 transaction -> ResponseEntity.ok(optionalTransaction.get())

@@ -3,6 +3,8 @@ package Di.Pierro.presentation.association;
 import Di.Pierro.application.dto.association.CreateAssociationInput;
 import Di.Pierro.application.port.input.AssociationUseCases;
 import Di.Pierro.domain.model.Association;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +23,13 @@ public class AssociationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody CreateAssociationInput createAssociationInput) {
+    public ResponseEntity<Void> save(@RequestBody @Valid CreateAssociationInput createAssociationInput) {
         associationUseCases.createAssociation(createAssociationInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Association> findById(@PathVariable UUID id) {
+    public ResponseEntity<Association> findById(@PathVariable @NotNull UUID id) {
         Optional<Association> optionalAssociation = associationUseCases.findById(id);
         return optionalAssociation.map(
                 association -> ResponseEntity.ok(optionalAssociation.get())
