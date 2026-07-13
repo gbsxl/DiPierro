@@ -11,7 +11,6 @@ import java.util.UUID;
 
 public record CreateTransactionInput(
         @NotNull
-        @NotBlank
         BigDecimal value,
 
         @NotBlank

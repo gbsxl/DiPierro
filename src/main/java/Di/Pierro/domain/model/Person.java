@@ -26,6 +26,9 @@ public class Person {
         );
     }
 
+    public Person() {
+    }
+
     public Person(UUID id, String completeName, String cpf, String address, Gender gender, String phoneNumber, String email, Actor actor) {
         this.id = id;
         this.completeName = completeName;
