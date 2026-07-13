@@ -3,6 +3,8 @@ package Di.Pierro.presentation.business;
 import Di.Pierro.application.dto.business.CreateBusinessInput;
 import Di.Pierro.application.port.input.BusinessUseCases;
 import Di.Pierro.domain.model.Business;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +23,13 @@ public class BusinessController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> save(@RequestBody CreateBusinessInput createBusinessInput) {
+    public ResponseEntity<Void> save(@RequestBody @Valid CreateBusinessInput createBusinessInput) {
         businessUseCases.createBusiness(createBusinessInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Business> findById(@PathVariable UUID id) {
+    public ResponseEntity<Business> findById(@PathVariable @NotNull UUID id) {
         Optional<Business> optionalBusiness = businessUseCases.findById(id);
         return optionalBusiness.map(
                 business -> ResponseEntity.ok(optionalBusiness.get())
