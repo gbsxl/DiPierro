@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PersonRepository {
-    void save(Person person, UUID actorId);
+    void save(Person person);
     Optional<Person> findById(UUID id);
     List<Person> findAll();
 }

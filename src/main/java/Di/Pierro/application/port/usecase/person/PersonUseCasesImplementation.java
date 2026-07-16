@@ -1,8 +1,10 @@
 package Di.Pierro.application.port.usecase.person;
 
 import Di.Pierro.application.dto.person.CreatePersonInput;
+import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.PersonUseCases;
 import Di.Pierro.application.port.output.PersonRepository;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Person;
 
 import java.util.List;
@@ -10,23 +12,28 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class PersonUseCasesImplementation implements PersonUseCases {
-    PersonRepository personRepository;
+    private final PersonRepository personRepository;
+    private final ActorUseCases actorUseCases;
 
-    public PersonUseCasesImplementation(PersonRepository personRepository) {
+    public PersonUseCasesImplementation(PersonRepository personRepository, ActorUseCases actorUseCases) {
         this.personRepository = personRepository;
+        this.actorUseCases = actorUseCases;
     }
 
     @Override
     public void createPerson(CreatePersonInput createPersonInput) {
-        Person person = Person.createPerson(
+        Actor actor = actorUseCases.createActor();
+
+        Person person = new Person(
                 createPersonInput.completeName(),
                 createPersonInput.cpf(),
                 createPersonInput.address(),
                 createPersonInput.gender(),
                 createPersonInput.phoneNumber(),
-                createPersonInput.email()
+                createPersonInput.email(),
+                actor
         );
-        personRepository.save(person, createPersonInput.actorId());
+        personRepository.save(person);
     }
 
     @Override

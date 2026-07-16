@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DocumentMentionUseCasesImplementation implements DocumentMentionUseCases {
-    DocumentMentionRepository documentMentionRepository;
+    private final DocumentMentionRepository documentMentionRepository;
 
     public DocumentMentionUseCasesImplementation(DocumentMentionRepository documentMentionRepository) {
         this.documentMentionRepository = documentMentionRepository;

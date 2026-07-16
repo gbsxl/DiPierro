@@ -19,11 +19,11 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 public class JpaDocumentMentionRepositoryAdapter implements DocumentMentionRepository {
-    ActorRepository actorRepository;
-    JpaDocumentRepository jpaDocumentRepository;
-    JpaDocumentMentionRepository jpaDocumentMentionRepository;
-    DocumentMentionMapper documentMentionMapper;
-    DocumentMapper documentMapper;
+    private final ActorRepository actorRepository;
+    private final JpaDocumentRepository jpaDocumentRepository;
+    private final JpaDocumentMentionRepository jpaDocumentMentionRepository;
+    private final DocumentMentionMapper documentMentionMapper;
+    private final DocumentMapper documentMapper;
 
     @Override
     public void save(DocumentMention documentMention, UUID documentId, UUID actorId) {

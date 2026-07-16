@@ -17,9 +17,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JpaAssociationRepositoryAdapter implements AssociationRepository {
 
-    JpaAssociationRepository jpaAssociationRepository;
-    AssociationMapper associationMapper;
-    ActorRepository actorRepository;
+    private final JpaAssociationRepository jpaAssociationRepository;
+    private final AssociationMapper associationMapper;
+    private final ActorRepository actorRepository;
 
 
     @Override

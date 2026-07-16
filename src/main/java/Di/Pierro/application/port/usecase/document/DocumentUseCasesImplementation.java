@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DocumentUseCasesImplementation implements DocumentUseCases {
-    DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
 
     public DocumentUseCasesImplementation(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;

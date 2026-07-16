@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class RedFlagUseCasesImplementation implements RedFlagUseCases {
-    RedFlagRepository redFlagRepository;
+    private final RedFlagRepository redFlagRepository;
 
     public RedFlagUseCasesImplementation(RedFlagRepository redFlagRepository) {
         this.redFlagRepository = redFlagRepository;

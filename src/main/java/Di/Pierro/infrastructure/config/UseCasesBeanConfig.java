@@ -1,8 +1,9 @@
 package Di.Pierro.infrastructure.config;
 
+import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.output.*;
-import Di.Pierro.application.port.usecase.actorindicator.ActorIndicatorUseCasesImplementation;
 import Di.Pierro.application.port.usecase.actor.ActorUseCasesImplementation;
+import Di.Pierro.application.port.usecase.actorindicator.ActorIndicatorUseCasesImplementation;
 import Di.Pierro.application.port.usecase.asset.AssetUseCasesImplementation;
 import Di.Pierro.application.port.usecase.association.AssociationUseCasesImplementation;
 import Di.Pierro.application.port.usecase.business.BusinessUseCasesImplementation;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class UseCasesBeanConfig {
-
     @Bean
     public ActorUseCasesImplementation actorUseCasesImplementation(ActorRepository actorRepository) {
         return new ActorUseCasesImplementation(actorRepository);
@@ -29,13 +29,13 @@ public class UseCasesBeanConfig {
     }
 
     @Bean
-    public BusinessUseCasesImplementation businessUseCasesImplementation(BusinessRepository businessRepository) {
-        return new BusinessUseCasesImplementation(businessRepository);
+    public BusinessUseCasesImplementation businessUseCasesImplementation(BusinessRepository businessRepository, ActorUseCases actorUseCases) {
+        return new BusinessUseCasesImplementation(businessRepository, actorUseCases);
     }
 
     @Bean
-    public PersonUseCasesImplementation personUseCasesImplementation(PersonRepository personRepository) {
-        return new PersonUseCasesImplementation(personRepository);
+    public PersonUseCasesImplementation personUseCasesImplementation(PersonRepository personRepository, ActorUseCases actorUseCases) {
+        return new PersonUseCasesImplementation(personRepository, actorUseCases);
     }
 
     @Bean
@@ -44,8 +44,8 @@ public class UseCasesBeanConfig {
     }
 
     @Bean
-    public PublicProcurementUseCasesImplementation publicProcurementUseCasesImplementation(PublicProcurementRepository publicProcurementRepository) {
-        return new PublicProcurementUseCasesImplementation(publicProcurementRepository);
+    public PublicProcurementUseCasesImplementation publicProcurementUseCasesImplementation(PublicProcurementRepository publicProcurementRepository, ActorUseCases actorUseCases) {
+        return new PublicProcurementUseCasesImplementation(publicProcurementRepository, actorUseCases);
     }
 
     @Bean

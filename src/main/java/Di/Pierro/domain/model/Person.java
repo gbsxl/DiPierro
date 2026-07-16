@@ -13,24 +13,11 @@ public class Person {
     private String email;
     private Actor actor;
 
-    public static Person createPerson(String completeName, String cpf, String address, Gender gender, String phoneNumber, String email){
-        return new Person(
-                UUID.randomUUID(),
-                completeName,
-                cpf,
-                address,
-                gender,
-                phoneNumber,
-                email,
-                new Actor()
-        );
-    }
-
     public Person() {
     }
 
-    public Person(UUID id, String completeName, String cpf, String address, Gender gender, String phoneNumber, String email, Actor actor) {
-        this.id = id;
+    public Person(String completeName, String cpf, String address, Gender gender, String phoneNumber, String email, Actor actor) {
+        this.id = UUID.randomUUID();
         this.completeName = completeName;
         this.cpf = cpf;
         this.address = address;

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ActorIndicatorUseCasesImplementation implements ActorIndicatorUseCases {
-    ActorIndicatorRepository actorIndicatorRepository;
+    private final ActorIndicatorRepository actorIndicatorRepository;
 
     public ActorIndicatorUseCasesImplementation(ActorIndicatorRepository actorIndicatorRepository) {
         this.actorIndicatorRepository = actorIndicatorRepository;

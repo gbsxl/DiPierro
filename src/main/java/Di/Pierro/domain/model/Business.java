@@ -4,37 +4,20 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Business {
-    UUID id;
-    String legalName;
-    String cnpj;
-    String fantasyName;
-    String phoneNumber;
-    String email;
-    boolean publicCompany;
-    String address;
-    BigDecimal estimatedNetWorth;
-    BigDecimal capitalStock;
-    Actor actor;
+    private UUID id;
+    private String legalName;
+    private String cnpj;
+    private String fantasyName;
+    private String phoneNumber;
+    private String email;
+    private boolean publicCompany;
+    private String address;
+    private BigDecimal estimatedNetWorth;
+    private BigDecimal capitalStock;
+    private Actor actor;
 
-    public static Business createBusiness(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock){
-        return new Business(
-                UUID.randomUUID(),
-                legalName,
-                cnpj,
-                fantasyName,
-                phoneNumber,
-                email,
-                publicCompany,
-                address,
-                estimatedNetWorth,
-                capitalStock,
-                new Actor()
-        );
-    }
-
-
-    public Business(UUID id, String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, Actor actor) {
-        this.id = id;
+    public Business(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, Actor actor) {
+        this.id = UUID.randomUUID();
         this.legalName = legalName;
         this.cnpj = cnpj;
         this.fantasyName = fantasyName;

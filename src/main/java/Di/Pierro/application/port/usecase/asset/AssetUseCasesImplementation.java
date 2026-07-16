@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class AssetUseCasesImplementation implements AssetUseCases {
-    AssetRepository assetRepository;
+    private final AssetRepository assetRepository;
 
     public AssetUseCasesImplementation(AssetRepository assetRepository) {
         this.assetRepository = assetRepository;
