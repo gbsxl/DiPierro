@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class AssociationUseCasesImplementation implements AssociationUseCases {
-    AssociationRepository associationRepository;
+    private final AssociationRepository associationRepository;
 
     public AssociationUseCasesImplementation(AssociationRepository associationRepository) {
         this.associationRepository = associationRepository;

@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PublicProcurementRepository {
-    void save(PublicProcurement publicProcurement, UUID actorId);
+    void save(PublicProcurement publicProcurement);
     Optional<PublicProcurement> findById(UUID id);
     List<PublicProcurement> findAll();
 }

@@ -3,7 +3,6 @@ package Di.Pierro.infrastructure.persistence.redflag;
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.application.port.output.RedFlagRepository;
 import Di.Pierro.domain.model.Actor;
-import Di.Pierro.domain.model.PublicProcurement;
 import Di.Pierro.domain.model.RedFlag;
 import Di.Pierro.infrastructure.mapper.PublicProcurementMapper;
 import Di.Pierro.infrastructure.mapper.RedFlagMapper;
@@ -19,11 +18,11 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
-    ActorRepository actorRepository;
-    JpaPublicProcurementRepository jpaPublicProcurementRepository;
-    JpaRedFlagRepository jpaRedFlagRepository;
-    RedFlagMapper redFlagMapper;
-    PublicProcurementMapper publicProcurementMapper;
+    private final ActorRepository actorRepository;
+    private final JpaPublicProcurementRepository jpaPublicProcurementRepository;
+    private final JpaRedFlagRepository jpaRedFlagRepository;
+    private final RedFlagMapper redFlagMapper;
+    private final PublicProcurementMapper publicProcurementMapper;
 
     @Override
     public void save(RedFlag redFlag, UUID actorId, UUID publicProcurementId) {

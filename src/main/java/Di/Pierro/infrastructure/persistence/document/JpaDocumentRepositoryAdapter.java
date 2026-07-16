@@ -17,10 +17,10 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 public class JpaDocumentRepositoryAdapter implements DocumentRepository {
-    JpaPublicProcurementRepository jpaPublicProcurementRepository;
-    JpaDocumentRepository jpaDocumentRepository;
-    DocumentMapper documentMapper;
-    PublicProcurementMapper publicProcurementMapper;
+    private final JpaPublicProcurementRepository jpaPublicProcurementRepository;
+    private final JpaDocumentRepository jpaDocumentRepository;
+    private final DocumentMapper documentMapper;
+    private final PublicProcurementMapper publicProcurementMapper;
 
     @Override
     public void save(Document document, UUID publicProcurementId) {

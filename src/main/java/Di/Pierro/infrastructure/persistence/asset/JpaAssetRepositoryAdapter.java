@@ -17,10 +17,10 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 public class JpaAssetRepositoryAdapter implements AssetRepository {
-    JpaPersonRepository jpaPersonRepository;
-    JpaAssetRepository jpaAssetRepository;
-    AssetMapper assetMapper;
-    PersonMapper personMapper;
+    private final JpaPersonRepository jpaPersonRepository;
+    private final JpaAssetRepository jpaAssetRepository;
+    private final AssetMapper assetMapper;
+    private final PersonMapper personMapper;
 
     @Override
     public void save(Asset asset, UUID personId) {

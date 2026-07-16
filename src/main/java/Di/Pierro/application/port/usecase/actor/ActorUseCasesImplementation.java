@@ -9,16 +9,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ActorUseCasesImplementation implements ActorUseCases {
-    ActorRepository actorRepository;
+    private final ActorRepository actorRepository;
 
     public ActorUseCasesImplementation(ActorRepository actorRepository) {
         this.actorRepository = actorRepository;
     }
 
     @Override
-    public void createActor() {
+    public Actor createActor() {
         Actor actor = Actor.createActor();
-        actorRepository.save(actor);
+        saveActor(actor);
+        return actor;
     }
 
     @Override
@@ -29,5 +30,9 @@ public class ActorUseCasesImplementation implements ActorUseCases {
     @Override
     public Optional<Actor> findById(UUID id) {
         return actorRepository.findById(id);
+    }
+
+    private void saveActor(Actor actor){
+        actorRepository.save(actor);
     }
 }

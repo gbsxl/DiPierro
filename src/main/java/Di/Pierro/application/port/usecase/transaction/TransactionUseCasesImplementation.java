@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class TransactionUseCasesImplementation implements TransactionUseCases {
-    TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
     public TransactionUseCasesImplementation(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;

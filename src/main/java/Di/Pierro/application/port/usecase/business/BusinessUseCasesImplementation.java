@@ -1,8 +1,10 @@
 package Di.Pierro.application.port.usecase.business;
 
 import Di.Pierro.application.dto.business.CreateBusinessInput;
+import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.BusinessUseCases;
 import Di.Pierro.application.port.output.BusinessRepository;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Business;
 
 import java.util.List;
@@ -11,14 +13,18 @@ import java.util.UUID;
 
 public class BusinessUseCasesImplementation implements BusinessUseCases {
     private final BusinessRepository businessRepository;
+    private final ActorUseCases actorUseCases;
 
-    public BusinessUseCasesImplementation(BusinessRepository businessRepository) {
+    public BusinessUseCasesImplementation(BusinessRepository businessRepository, ActorUseCases actorUseCases) {
         this.businessRepository = businessRepository;
+        this.actorUseCases = actorUseCases;
     }
 
     @Override
     public void createBusiness(CreateBusinessInput createBusinessInput) {
-        Business business = Business.createBusiness(
+        Actor actor = actorUseCases.createActor();
+
+        Business business = new Business(
                 createBusinessInput.legalName(),
                 createBusinessInput.cnpj(),
                 createBusinessInput.fantasyName(),
@@ -27,9 +33,11 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
                 createBusinessInput.isPublicCompany(),
                 createBusinessInput.address(),
                 createBusinessInput.estimatedNetWorth(),
-                createBusinessInput.estimatedNetWorth()
+                createBusinessInput.estimatedNetWorth(),
+                actor
         );
-        businessRepository.save(business, createBusinessInput.actorId());
+        
+        businessRepository.save(business);
     }
 
     @Override

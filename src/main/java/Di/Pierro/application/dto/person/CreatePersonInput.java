@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.UUID;
-
 public record CreatePersonInput(
         @NotBlank
         @NotNull
@@ -25,9 +23,6 @@ public record CreatePersonInput(
 
         @Size(max = 150)
         @Email
-        String email,
-
-        @NotNull
-        UUID actorId
+        String email
 ) {
 }

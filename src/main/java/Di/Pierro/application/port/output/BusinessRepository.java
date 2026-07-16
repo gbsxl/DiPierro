@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface BusinessRepository {
-    void save(Business business, UUID actorId);
+    void save(Business business);
     Optional<Business> findById(UUID id);
     List<Business> findAll();
 }

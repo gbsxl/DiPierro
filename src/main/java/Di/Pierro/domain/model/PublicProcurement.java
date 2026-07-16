@@ -25,48 +25,11 @@ public class PublicProcurement {
     private OffsetDateTime createdAt;
     private Actor actor;
 
-    public static PublicProcurement createPublicProcurement(
-            String publicProcurementNumber,
-            String processNumber,
-            String object,
-            String modality,
-            String situation,
-            String legalInstrument,
-            BigDecimal estimatedValue,
-            LocalDate publicationDate,
-            LocalDate openingDate,
-            String designatedContact,
-            String ibgeCityCode,
-            String federativeUnitAcronym,
-            String managingUnityCode,
-            String cnpjGovernmentAgency
-    ) {
-        return new PublicProcurement(
-                UUID.randomUUID(),
-                publicProcurementNumber,
-                processNumber,
-                object,
-                modality,
-                situation,
-                legalInstrument,
-                estimatedValue,
-                publicationDate,
-                openingDate,
-                designatedContact,
-                ibgeCityCode,
-                federativeUnitAcronym,
-                managingUnityCode,
-                cnpjGovernmentAgency,
-                OffsetDateTime.now(ZoneOffset.UTC),
-                new Actor()
-        );
-    }
-
     public PublicProcurement() {
     }
 
-    public PublicProcurement(UUID id, String publicProcurementNumber, String processNumber, String object, String modality, String situation, String legalInstrument, BigDecimal estimatedValue, LocalDate publicationDate, LocalDate openingDate, String designatedContact, String ibgeCityCode, String federativeUnitAcronym, String managingUnityCode, String cnpjGovernmentAgency, OffsetDateTime createdAt, Actor actor) {
-        this.id = id;
+    public PublicProcurement(String publicProcurementNumber, String processNumber, String object, String modality, String situation, String legalInstrument, BigDecimal estimatedValue, LocalDate publicationDate, LocalDate openingDate, String designatedContact, String ibgeCityCode, String federativeUnitAcronym, String managingUnityCode, String cnpjGovernmentAgency, Actor actor) {
+        this.id = UUID.randomUUID();
         this.publicProcurementNumber = publicProcurementNumber;
         this.processNumber = processNumber;
         this.object = object;
@@ -81,7 +44,7 @@ public class PublicProcurement {
         this.federativeUnitAcronym = federativeUnitAcronym;
         this.managingUnityCode = managingUnityCode;
         this.cnpjGovernmentAgency = cnpjGovernmentAgency;
-        this.createdAt = createdAt;
+        this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
         this.actor = actor;
     }
 

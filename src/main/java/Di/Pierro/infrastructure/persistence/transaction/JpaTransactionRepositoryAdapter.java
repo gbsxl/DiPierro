@@ -17,9 +17,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JpaTransactionRepositoryAdapter implements TransactionRepository {
 
-    JpaTransactionRepository jpaTransactionRepository;
-    TransactionMapper transactionMapper;
-    ActorRepository actorRepository;
+    private final JpaTransactionRepository jpaTransactionRepository;
+    private final TransactionMapper transactionMapper;
+    private final ActorRepository actorRepository;
 
     @Override
     public void save(Transaction transaction, UUID actorSenderId, UUID actorReceiver) {

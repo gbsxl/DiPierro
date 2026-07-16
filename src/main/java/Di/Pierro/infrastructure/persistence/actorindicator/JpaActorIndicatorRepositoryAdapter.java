@@ -15,9 +15,9 @@ import java.util.UUID;
 @Component
 @AllArgsConstructor
 public class JpaActorIndicatorRepositoryAdapter implements ActorIndicatorRepository {
-    ActorRepository actorRepository;
-    JpaActorIndicatorRepository jpaActorIndicatorRepository;
-    ActorIndicatorMapper actorIndicatorMapper;
+    private final ActorRepository actorRepository;
+    private final JpaActorIndicatorRepository jpaActorIndicatorRepository;
+    private final ActorIndicatorMapper actorIndicatorMapper;
 
     @Override
     public void save(ActorIndicator actorIndicator, UUID actorId) {
