@@ -38,4 +38,45 @@ public class PersonController {
     public ResponseEntity<List<Person>> findAll() {
         return ResponseEntity.ok(personUseCases.findAll());
     }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<Person> findByActorId(@PathVariable @NotNull UUID actorId){
+        Optional<Person> optionalPerson = personUseCases.findByActorId(actorId);
+        return optionalPerson.map(person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{string}/completeName")
+    public ResponseEntity<List<Person>> findByCompleteName(@PathVariable String string){
+        List<Person> personList = personUseCases.findByCompleteName(string);
+        return ResponseEntity.ok(personList);
+    }
+
+    @GetMapping("/{string}/cpf")
+    public ResponseEntity<List<Person>> findByCpf(@PathVariable String string){
+        List<Person> personList = personUseCases.findByCPF(string);
+        return ResponseEntity.ok(personList);
+    }
+
+    @GetMapping("/{string}/gender")
+    public ResponseEntity<List<Person>> findByGender(@PathVariable String string){
+        List<Person> personList = personUseCases.findByGender(string);
+        return ResponseEntity.ok(personList);
+    }
+
+    @GetMapping("/{string}/email")
+    public ResponseEntity<List<Person>> findByEmail(@PathVariable String string){
+        List<Person> personList = personUseCases.findByEmail(string);
+        return ResponseEntity.ok(personList);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Person> update(@PathVariable @NotNull UUID id, @RequestBody CreatePersonInput person){
+        return ResponseEntity.ok(personUseCases.updateById(id, person));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id){
+        personUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
 }
