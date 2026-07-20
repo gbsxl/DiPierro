@@ -16,6 +16,9 @@ public class Business {
     private BigDecimal capitalStock;
     private Actor actor;
 
+    public Business() {
+    }
+
     public Business(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, Actor actor) {
         this.id = UUID.randomUUID();
         this.legalName = legalName;
