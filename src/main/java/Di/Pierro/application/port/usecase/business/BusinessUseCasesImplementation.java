@@ -36,7 +36,7 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
                 createBusinessInput.estimatedNetWorth(),
                 actor
         );
-        
+
         businessRepository.save(business);
     }
 
@@ -48,5 +48,45 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
     @Override
     public Optional<Business> findById(UUID id) {
         return businessRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Business> findByActorId(UUID id) {
+        return businessRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Business> findByName(String string) {
+        return businessRepository.findByName(string);
+    }
+
+    @Override
+    public List<Business> findByCNPJ(String string) {
+        return businessRepository.findByCNPJ(string);
+    }
+
+    @Override
+    public List<Business> findByPhoneNumber(String string) {
+        return businessRepository.findByPhoneNumber(string);
+    }
+
+    @Override
+    public List<Business> findByEmail(String string) {
+        return businessRepository.findByEmail(string);
+    }
+
+    @Override
+    public List<Business> findPublicCompanies() {
+        return businessRepository.findPublicCompanies();
+    }
+
+    @Override
+    public Business updateById(UUID id, CreateBusinessInput business) {
+        return businessRepository.updateById(id, business);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        businessRepository.deleteById(id);
     }
 }

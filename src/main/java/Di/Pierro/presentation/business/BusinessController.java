@@ -22,7 +22,7 @@ public class BusinessController {
         this.businessUseCases = businessUseCases;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid CreateBusinessInput createBusinessInput) {
         businessUseCases.createBusiness(createBusinessInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -39,5 +39,53 @@ public class BusinessController {
     @GetMapping
     public ResponseEntity<List<Business>> findAll() {
         return ResponseEntity.ok(businessUseCases.findAll());
+    }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<Business> findByActorId(@PathVariable @NotNull UUID actorId) {
+        Optional<Business> optionalBusiness = businessUseCases.findByActorId(actorId);
+        return optionalBusiness.map(
+                business -> ResponseEntity.ok(optionalBusiness.get())
+        ).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{string}/name")
+    public ResponseEntity<List<Business>> findByName(@PathVariable String string) {
+        List<Business> businessList = businessUseCases.findByName(string);
+        return ResponseEntity.ok(businessList);
+    }
+
+    @GetMapping("/{string}/cnpj")
+    public ResponseEntity<List<Business>> findByCnpj(@PathVariable String string) {
+        List<Business> businessList = businessUseCases.findByCNPJ(string);
+        return ResponseEntity.ok(businessList);
+    }
+
+    @GetMapping("/{string}/phoneNumber")
+    public ResponseEntity<List<Business>> findByPhoneNumber(@PathVariable String string) {
+        List<Business> businessList = businessUseCases.findByPhoneNumber(string);
+        return ResponseEntity.ok(businessList);
+    }
+
+    @GetMapping("/{string}/email")
+    public ResponseEntity<List<Business>> findByEmail(@PathVariable String string) {
+        List<Business> businessList = businessUseCases.findByEmail(string);
+        return ResponseEntity.ok(businessList);
+    }
+
+    @GetMapping("/public")
+    public ResponseEntity<List<Business>> findPublicCompanies() {
+        return ResponseEntity.ok(businessUseCases.findPublicCompanies());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Business> update(@PathVariable @NotNull UUID id, @RequestBody CreateBusinessInput business) {
+        return ResponseEntity.ok(businessUseCases.updateById(id, business));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        businessUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
     }
 }
