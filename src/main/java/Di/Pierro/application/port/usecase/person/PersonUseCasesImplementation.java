@@ -45,4 +45,39 @@ public class PersonUseCasesImplementation implements PersonUseCases {
     public Optional<Person> findById(UUID id) {
         return personRepository.findById(id);
     }
+
+    @Override
+    public Optional<Person> findByActorId(UUID id) {
+        return personRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Person> findByCompleteName(String string) {
+        return personRepository.findByCompleteName(string);
+    }
+
+    @Override
+    public List<Person> findByCPF(String string) {
+        return personRepository.findByCPF(string);
+    }
+
+    @Override
+    public List<Person> findByGender(String string) {
+        return personRepository.findByGender(string);
+    }
+
+    @Override
+    public List<Person> findByEmail(String string) {
+        return personRepository.findByEmail(string);
+    }
+
+    @Override
+    public Person updateById(UUID id, CreatePersonInput person) {
+        return personRepository.updateById(id, person);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        personRepository.deleteById(id);
+    }
 }
