@@ -20,6 +20,9 @@ public class Association {
     private Actor secondActor;
 
 
+    public Association() {
+    }
+
     public static Association createAssociation(
             AssociationType associationType,
             String source,
