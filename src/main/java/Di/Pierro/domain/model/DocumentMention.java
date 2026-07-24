@@ -27,6 +27,9 @@ public class DocumentMention {
         );
     }
 
+    public DocumentMention() {
+    }
+
     public DocumentMention(UUID id, String role, Integer confidence, String extractedName, Document document, Actor actor) {
         this.id = id;
         this.role = role;

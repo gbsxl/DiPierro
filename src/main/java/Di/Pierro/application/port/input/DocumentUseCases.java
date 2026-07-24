@@ -11,4 +11,10 @@ public interface DocumentUseCases {
     void createDocument(CreateDocumentInput createDocumentInput);
     List<Document> findAll();
     Optional<Document> findById(UUID id);
+    List<Document> findByPublicProcurementId(UUID id);
+    List<Document> findByName(String string);
+    List<Document> findByType(String string);
+    List<Document> findByExtracted(boolean extracted);
+    Document updateById(UUID id, CreateDocumentInput document);
+    void deleteById(UUID id);
 }

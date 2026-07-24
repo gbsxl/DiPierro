@@ -39,4 +39,29 @@ public class DocumentMentionUseCasesImplementation implements DocumentMentionUse
     public Optional<DocumentMention> findById(UUID id) {
         return documentMentionRepository.findById(id);
     }
+
+    @Override
+    public List<DocumentMention> findByActorId(UUID id) {
+        return documentMentionRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<DocumentMention> findByDocumentId(UUID id) {
+        return documentMentionRepository.findByDocumentId(id);
+    }
+
+    @Override
+    public List<DocumentMention> findByExtractedName(String string) {
+        return documentMentionRepository.findByExtractedName(string);
+    }
+
+    @Override
+    public DocumentMention updateById(UUID id, CreateDocumentMentionInput documentMention) {
+        return documentMentionRepository.updateById(id, documentMention);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        documentMentionRepository.deleteById(id);
+    }
 }
