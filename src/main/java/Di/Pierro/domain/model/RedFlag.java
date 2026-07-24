@@ -37,6 +37,9 @@ public class RedFlag {
         );
     }
 
+    public RedFlag() {
+    }
+
     public RedFlag(UUID id, String type, Integer severity, String description, OffsetDateTime detectedAt, Actor actor, PublicProcurement publicProcurement, UUID transactionId, UUID associationId) {
         this.id = id;
         this.type = type;
