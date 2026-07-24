@@ -38,6 +38,9 @@ public class Asset {
         );
     }
 
+    public Asset() {
+    }
+
     public Asset(UUID id, String type, String description, BigDecimal estimatedValue, String source, boolean stillHaveIt, LocalDate acquiredAt, LocalDate mappedAt, Person person) {
         this.id = id;
         this.type = type;

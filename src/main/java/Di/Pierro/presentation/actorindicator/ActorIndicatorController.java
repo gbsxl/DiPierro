@@ -38,4 +38,25 @@ public class ActorIndicatorController {
     public ResponseEntity<List<ActorIndicator>> findAll() {
         return ResponseEntity.ok(actorIndicatorUseCases.findAll());
     }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<List<ActorIndicator>> findByActorId(@PathVariable @NotNull UUID actorId) {
+        return ResponseEntity.ok(actorIndicatorUseCases.findByActorId(actorId));
+    }
+
+    @GetMapping("/{string}/indicatorType")
+    public ResponseEntity<List<ActorIndicator>> findByIndicatorType(@PathVariable String string) {
+        return ResponseEntity.ok(actorIndicatorUseCases.findByIndicatorType(string));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ActorIndicator> update(@PathVariable @NotNull UUID id, @RequestBody CreateActorIndicatorInput actorIndicator) {
+        return ResponseEntity.ok(actorIndicatorUseCases.updateById(id, actorIndicator));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        actorIndicatorUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
 }
