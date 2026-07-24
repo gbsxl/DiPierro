@@ -1,6 +1,7 @@
 package Di.Pierro.application.port.usecase.publicprocurement;
 
 import Di.Pierro.application.dto.publicprocurement.CreatePublicProcurementInput;
+import Di.Pierro.application.dto.publicprocurement.PublicProcurementFilter;
 import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.PublicProcurementUseCases;
 import Di.Pierro.application.port.output.PublicProcurementRepository;
@@ -52,5 +53,25 @@ public class PublicProcurementUseCasesImplementation implements PublicProcuremen
     @Override
     public Optional<PublicProcurement> findById(UUID id) {
         return publicProcurementRepository.findById(id);
+    }
+
+    @Override
+    public Optional<PublicProcurement> findByActorId(UUID id) {
+        return publicProcurementRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<PublicProcurement> findByFilter(PublicProcurementFilter filter) {
+        return publicProcurementRepository.findByFilter(filter);
+    }
+
+    @Override
+    public PublicProcurement updateById(UUID id, CreatePublicProcurementInput procurementInput) {
+        return publicProcurementRepository.updateById(id, procurementInput);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        publicProcurementRepository.deleteById(id);
     }
 }
