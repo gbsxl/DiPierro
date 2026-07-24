@@ -1,6 +1,7 @@
 package Di.Pierro.application.port.usecase.redflag;
 
 import Di.Pierro.application.dto.redflag.CreateRedFlagInput;
+import Di.Pierro.application.dto.redflag.RedFlagFilter;
 import Di.Pierro.application.port.input.RedFlagUseCases;
 import Di.Pierro.application.port.output.RedFlagRepository;
 import Di.Pierro.domain.model.RedFlag;
@@ -38,5 +39,50 @@ public class RedFlagUseCasesImplementation implements RedFlagUseCases {
     @Override
     public Optional<RedFlag> findById(UUID id) {
         return redFlagRepository.findById(id);
+    }
+
+    @Override
+    public List<RedFlag> findByActorId(UUID id) {
+        return redFlagRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<RedFlag> findByPublicProcurementId(UUID id) {
+        return redFlagRepository.findByPublicProcurementId(id);
+    }
+
+    @Override
+    public List<RedFlag> findByTransactionId(UUID id) {
+        return redFlagRepository.findByTransactionId(id);
+    }
+
+    @Override
+    public List<RedFlag> findByAssociationId(UUID id) {
+        return redFlagRepository.findByAssociationId(id);
+    }
+
+    @Override
+    public List<RedFlag> findByType(String string) {
+        return redFlagRepository.findByType(string);
+    }
+
+    @Override
+    public List<RedFlag> findBySeverity(Integer severity) {
+        return redFlagRepository.findBySeverity(severity);
+    }
+
+    @Override
+    public List<RedFlag> findByFilter(RedFlagFilter filter) {
+        return redFlagRepository.findByFilter(filter);
+    }
+
+    @Override
+    public RedFlag updateById(UUID id, CreateRedFlagInput redFlag) {
+        return redFlagRepository.updateById(id, redFlag);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        redFlagRepository.deleteById(id);
     }
 }
