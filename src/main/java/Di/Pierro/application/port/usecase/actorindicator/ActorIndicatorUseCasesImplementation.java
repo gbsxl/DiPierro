@@ -38,4 +38,24 @@ public class ActorIndicatorUseCasesImplementation implements ActorIndicatorUseCa
     public Optional<ActorIndicator> findById(UUID id) {
         return actorIndicatorRepository.findById(id);
     }
+
+    @Override
+    public List<ActorIndicator> findByActorId(UUID id) {
+        return actorIndicatorRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<ActorIndicator> findByIndicatorType(String string) {
+        return actorIndicatorRepository.findByIndicatorType(string);
+    }
+
+    @Override
+    public ActorIndicator updateById(UUID id, CreateActorIndicatorInput actorIndicator) {
+        return actorIndicatorRepository.updateById(id, actorIndicator);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        actorIndicatorRepository.deleteById(id);
+    }
 }

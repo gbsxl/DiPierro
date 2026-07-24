@@ -28,6 +28,9 @@ public class ActorIndicator {
         );
     }
 
+    public ActorIndicator() {
+    }
+
     public ActorIndicator(UUID id, String indicatorType, String value, String source, LocalDate date, Actor actor) {
         this.id = id;
         this.indicatorType = indicatorType;

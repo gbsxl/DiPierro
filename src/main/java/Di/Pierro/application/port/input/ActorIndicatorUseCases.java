@@ -11,4 +11,8 @@ public interface ActorIndicatorUseCases {
     void createActorIndicator(CreateActorIndicatorInput createActorIndicatorInput);
     List<ActorIndicator> findAll();
     Optional<ActorIndicator> findById(UUID id);
+    List<ActorIndicator> findByActorId(UUID id);
+    List<ActorIndicator> findByIndicatorType(String string);
+    ActorIndicator updateById(UUID id, CreateActorIndicatorInput actorIndicator);
+    void deleteById(UUID id);
 }

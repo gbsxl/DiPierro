@@ -11,4 +11,8 @@ public interface AssetUseCases {
     void createAsset(CreateAssetInput createAssetInput);
     List<Asset> findAll();
     Optional<Asset> findById(UUID id);
+    List<Asset> findByType(String string);
+    List<Asset> findByStillHaveIt(boolean stillHaveIt);
+    Asset updateById(UUID id, CreateAssetInput asset);
+    void deleteById(UUID id);
 }
