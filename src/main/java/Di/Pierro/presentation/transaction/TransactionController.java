@@ -1,6 +1,7 @@
 package Di.Pierro.presentation.transaction;
 
 import Di.Pierro.application.dto.transaction.CreateTransactionInput;
+import Di.Pierro.application.dto.transaction.TransactionFilter;
 import Di.Pierro.application.port.input.TransactionUseCases;
 import Di.Pierro.domain.model.Transaction;
 import jakarta.validation.Valid;
@@ -39,5 +40,17 @@ public class TransactionController {
     @GetMapping
     public ResponseEntity<List<Transaction>> findAll() {
         return ResponseEntity.ok(transactionUseCases.findAll());
+    }
+
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Transaction>> findByFilter(@Valid @ModelAttribute TransactionFilter filter) {
+        return ResponseEntity.ok(transactionUseCases.findByFilter(filter));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(UUID id){
+        transactionUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
     }
 }
