@@ -38,4 +38,30 @@ public class DocumentMentionController {
     public ResponseEntity<List<DocumentMention>> findAll() {
         return ResponseEntity.ok(documentMentionUseCases.findAll());
     }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<List<DocumentMention>> findByActorId(@PathVariable @NotNull UUID actorId) {
+        return ResponseEntity.ok(documentMentionUseCases.findByActorId(actorId));
+    }
+
+    @GetMapping("/{documentId}/documentId")
+    public ResponseEntity<List<DocumentMention>> findByDocumentId(@PathVariable @NotNull UUID documentId) {
+        return ResponseEntity.ok(documentMentionUseCases.findByDocumentId(documentId));
+    }
+
+    @GetMapping("/{string}/extractedName")
+    public ResponseEntity<List<DocumentMention>> findByExtractedName(@PathVariable String string) {
+        return ResponseEntity.ok(documentMentionUseCases.findByExtractedName(string));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DocumentMention> update(@PathVariable @NotNull UUID id, @RequestBody CreateDocumentMentionInput documentMention) {
+        return ResponseEntity.ok(documentMentionUseCases.updateById(id, documentMention));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        documentMentionUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
 }
