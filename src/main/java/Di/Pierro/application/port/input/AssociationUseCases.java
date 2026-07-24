@@ -11,4 +11,9 @@ public interface AssociationUseCases {
     void createAssociation(CreateAssociationInput createAssociationInput);
     List<Association> findAll();
     Optional<Association> findById(UUID id);
+    List<Association> findByActorId(UUID id);
+    List<Association> findByType(String string);
+    List<Association> findEndedAssociations();
+    Association updateById(UUID id, CreateAssociationInput association);
+    void deleteById(UUID id);
 }

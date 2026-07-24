@@ -41,4 +41,29 @@ public class AssociationUseCasesImplementation implements AssociationUseCases {
     public Optional<Association> findById(UUID id) {
         return associationRepository.findById(id);
     }
+
+    @Override
+    public List<Association> findByActorId(UUID id) {
+        return associationRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Association> findByType(String string) {
+        return associationRepository.findByType(string);
+    }
+
+    @Override
+    public List<Association> findEndedAssociations() {
+        return associationRepository.findEndedAssociations();
+    }
+
+    @Override
+    public Association updateById(UUID id, CreateAssociationInput association) {
+        return associationRepository.updateById(id, association);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        associationRepository.deleteById(id);
+    }
 }
