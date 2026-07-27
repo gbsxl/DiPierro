@@ -33,7 +33,7 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
                 createBusinessInput.isPublicCompany(),
                 createBusinessInput.address(),
                 createBusinessInput.estimatedNetWorth(),
-                createBusinessInput.estimatedNetWorth(),
+                createBusinessInput.capitalStock(),
                 actor
         );
 
