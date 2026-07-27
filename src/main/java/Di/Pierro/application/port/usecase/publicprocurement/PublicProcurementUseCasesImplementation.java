@@ -1,8 +1,11 @@
 package Di.Pierro.application.port.usecase.publicprocurement;
 
 import Di.Pierro.application.dto.publicprocurement.CreatePublicProcurementInput;
+import Di.Pierro.application.dto.publicprocurement.PublicProcurementFilter;
+import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.PublicProcurementUseCases;
 import Di.Pierro.application.port.output.PublicProcurementRepository;
+import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.PublicProcurement;
 
 import java.util.List;
@@ -10,15 +13,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class PublicProcurementUseCasesImplementation implements PublicProcurementUseCases {
-    PublicProcurementRepository publicProcurementRepository;
+    private final PublicProcurementRepository publicProcurementRepository;
+    private final ActorUseCases actorUseCases;
 
-    public PublicProcurementUseCasesImplementation(PublicProcurementRepository publicProcurementRepository) {
+    public PublicProcurementUseCasesImplementation(PublicProcurementRepository publicProcurementRepository, ActorUseCases actorUseCases) {
         this.publicProcurementRepository = publicProcurementRepository;
+        this.actorUseCases = actorUseCases;
     }
 
     @Override
     public void createPublicProcurement(CreatePublicProcurementInput createPublicProcurementInput) {
-        PublicProcurement publicProcurement = PublicProcurement.createPublicProcurement(
+        Actor actor = actorUseCases.createActor();
+
+        PublicProcurement publicProcurement = new PublicProcurement(
                 createPublicProcurementInput.publicProcurementNumber(),
                 createPublicProcurementInput.processNumber(),
                 createPublicProcurementInput.object(),
@@ -32,9 +39,10 @@ public class PublicProcurementUseCasesImplementation implements PublicProcuremen
                 createPublicProcurementInput.ibgeCityCode(),
                 createPublicProcurementInput.federativeUnitAcronym(),
                 createPublicProcurementInput.managingUnityCode(),
-                createPublicProcurementInput.cnpjGovernmentAgency()
+                createPublicProcurementInput.cnpjGovernmentAgency(),
+                actor
         );
-        publicProcurementRepository.save(publicProcurement, createPublicProcurementInput.actorId());
+        publicProcurementRepository.save(publicProcurement);
     }
 
     @Override
@@ -45,5 +53,25 @@ public class PublicProcurementUseCasesImplementation implements PublicProcuremen
     @Override
     public Optional<PublicProcurement> findById(UUID id) {
         return publicProcurementRepository.findById(id);
+    }
+
+    @Override
+    public Optional<PublicProcurement> findByActorId(UUID id) {
+        return publicProcurementRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<PublicProcurement> findByFilter(PublicProcurementFilter filter) {
+        return publicProcurementRepository.findByFilter(filter);
+    }
+
+    @Override
+    public PublicProcurement updateById(UUID id, CreatePublicProcurementInput procurementInput) {
+        return publicProcurementRepository.updateById(id, procurementInput);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        publicProcurementRepository.deleteById(id);
     }
 }

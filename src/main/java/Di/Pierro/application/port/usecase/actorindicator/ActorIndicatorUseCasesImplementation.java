@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ActorIndicatorUseCasesImplementation implements ActorIndicatorUseCases {
-    ActorIndicatorRepository actorIndicatorRepository;
+    private final ActorIndicatorRepository actorIndicatorRepository;
 
     public ActorIndicatorUseCasesImplementation(ActorIndicatorRepository actorIndicatorRepository) {
         this.actorIndicatorRepository = actorIndicatorRepository;
@@ -37,5 +37,25 @@ public class ActorIndicatorUseCasesImplementation implements ActorIndicatorUseCa
     @Override
     public Optional<ActorIndicator> findById(UUID id) {
         return actorIndicatorRepository.findById(id);
+    }
+
+    @Override
+    public List<ActorIndicator> findByActorId(UUID id) {
+        return actorIndicatorRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<ActorIndicator> findByIndicatorType(String string) {
+        return actorIndicatorRepository.findByIndicatorType(string);
+    }
+
+    @Override
+    public ActorIndicator updateById(UUID id, CreateActorIndicatorInput actorIndicator) {
+        return actorIndicatorRepository.updateById(id, actorIndicator);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        actorIndicatorRepository.deleteById(id);
     }
 }

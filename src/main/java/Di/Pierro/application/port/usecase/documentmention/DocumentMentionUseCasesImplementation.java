@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DocumentMentionUseCasesImplementation implements DocumentMentionUseCases {
-    DocumentMentionRepository documentMentionRepository;
+    private final DocumentMentionRepository documentMentionRepository;
 
     public DocumentMentionUseCasesImplementation(DocumentMentionRepository documentMentionRepository) {
         this.documentMentionRepository = documentMentionRepository;
@@ -38,5 +38,30 @@ public class DocumentMentionUseCasesImplementation implements DocumentMentionUse
     @Override
     public Optional<DocumentMention> findById(UUID id) {
         return documentMentionRepository.findById(id);
+    }
+
+    @Override
+    public List<DocumentMention> findByActorId(UUID id) {
+        return documentMentionRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<DocumentMention> findByDocumentId(UUID id) {
+        return documentMentionRepository.findByDocumentId(id);
+    }
+
+    @Override
+    public List<DocumentMention> findByExtractedName(String string) {
+        return documentMentionRepository.findByExtractedName(string);
+    }
+
+    @Override
+    public DocumentMention updateById(UUID id, CreateDocumentMentionInput documentMention) {
+        return documentMentionRepository.updateById(id, documentMention);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        documentMentionRepository.deleteById(id);
     }
 }

@@ -1,6 +1,7 @@
 package Di.Pierro.application.port.input;
 
 import Di.Pierro.application.dto.transaction.CreateTransactionInput;
+import Di.Pierro.application.dto.transaction.TransactionFilter;
 import Di.Pierro.domain.model.Transaction;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface TransactionUseCases {
     void createTransaction(CreateTransactionInput createTransactionInput);
     List<Transaction> findAll();
     Optional<Transaction> findById(UUID id);
+    List<Transaction> findByFilter(TransactionFilter filter);
+    void deleteById(UUID id);
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DocumentUseCasesImplementation implements DocumentUseCases {
-    DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
 
     public DocumentUseCasesImplementation(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
@@ -38,5 +38,35 @@ public class DocumentUseCasesImplementation implements DocumentUseCases {
     @Override
     public Optional<Document> findById(UUID id) {
         return documentRepository.findById(id);
+    }
+
+    @Override
+    public List<Document> findByPublicProcurementId(UUID id) {
+        return documentRepository.findByPublicProcurementId(id);
+    }
+
+    @Override
+    public List<Document> findByName(String string) {
+        return documentRepository.findByName(string);
+    }
+
+    @Override
+    public List<Document> findByType(String string) {
+        return documentRepository.findByType(string);
+    }
+
+    @Override
+    public List<Document> findByExtracted(boolean extracted) {
+        return documentRepository.findByExtracted(extracted);
+    }
+
+    @Override
+    public Document updateById(UUID id, CreateDocumentInput document) {
+        return documentRepository.updateById(id, document);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        documentRepository.deleteById(id);
     }
 }

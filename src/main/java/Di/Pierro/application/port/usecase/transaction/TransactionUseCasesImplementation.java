@@ -1,6 +1,7 @@
 package Di.Pierro.application.port.usecase.transaction;
 
 import Di.Pierro.application.dto.transaction.CreateTransactionInput;
+import Di.Pierro.application.dto.transaction.TransactionFilter;
 import Di.Pierro.application.port.input.TransactionUseCases;
 import Di.Pierro.application.port.output.TransactionRepository;
 import Di.Pierro.domain.enums.Currency;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class TransactionUseCasesImplementation implements TransactionUseCases {
-    TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
     public TransactionUseCasesImplementation(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
@@ -37,4 +38,15 @@ public class TransactionUseCasesImplementation implements TransactionUseCases {
     public Optional<Transaction> findById(UUID id) {
         return transactionRepository.findById(id);
     }
+
+    @Override
+    public List<Transaction> findByFilter(TransactionFilter filter) {
+        return transactionRepository.findByFilter(filter);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        transactionRepository.deleteById(id);
+    }
+
 }

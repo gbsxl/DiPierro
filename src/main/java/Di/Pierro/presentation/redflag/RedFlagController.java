@@ -1,6 +1,7 @@
 package Di.Pierro.presentation.redflag;
 
 import Di.Pierro.application.dto.redflag.CreateRedFlagInput;
+import Di.Pierro.application.dto.redflag.RedFlagFilter;
 import Di.Pierro.application.port.input.RedFlagUseCases;
 import Di.Pierro.domain.model.RedFlag;
 import jakarta.validation.Valid;
@@ -37,5 +38,51 @@ public class RedFlagController {
     @GetMapping
     public ResponseEntity<List<RedFlag>> findAll() {
         return ResponseEntity.ok(redFlagUseCases.findAll());
+    }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<List<RedFlag>> findByActorId(@PathVariable @NotNull UUID actorId) {
+        return ResponseEntity.ok(redFlagUseCases.findByActorId(actorId));
+    }
+
+    @GetMapping("/{publicProcurementId}/publicProcurementId")
+    public ResponseEntity<List<RedFlag>> findByPublicProcurementId(@PathVariable @NotNull UUID publicProcurementId) {
+        return ResponseEntity.ok(redFlagUseCases.findByPublicProcurementId(publicProcurementId));
+    }
+
+    @GetMapping("/{transactionId}/transactionId")
+    public ResponseEntity<List<RedFlag>> findByTransactionId(@PathVariable @NotNull UUID transactionId) {
+        return ResponseEntity.ok(redFlagUseCases.findByTransactionId(transactionId));
+    }
+
+    @GetMapping("/{associationId}/associationId")
+    public ResponseEntity<List<RedFlag>> findByAssociationId(@PathVariable @NotNull UUID associationId) {
+        return ResponseEntity.ok(redFlagUseCases.findByAssociationId(associationId));
+    }
+
+    @GetMapping("/{string}/type")
+    public ResponseEntity<List<RedFlag>> findByType(@PathVariable String string) {
+        return ResponseEntity.ok(redFlagUseCases.findByType(string));
+    }
+
+    @GetMapping("/{severity}/severity")
+    public ResponseEntity<List<RedFlag>> findBySeverity(@PathVariable Integer severity) {
+        return ResponseEntity.ok(redFlagUseCases.findBySeverity(severity));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<RedFlag>> findByFilter(@Valid @ModelAttribute RedFlagFilter filter) {
+        return ResponseEntity.ok(redFlagUseCases.findByFilter(filter));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RedFlag> update(@PathVariable @NotNull UUID id, @RequestBody CreateRedFlagInput redFlag) {
+        return ResponseEntity.ok(redFlagUseCases.updateById(id, redFlag));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        redFlagUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
     }
 }

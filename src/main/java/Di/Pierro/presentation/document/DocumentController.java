@@ -38,4 +38,35 @@ public class DocumentController {
     public ResponseEntity<List<Document>> findAll() {
         return ResponseEntity.ok(documentUseCases.findAll());
     }
+
+    @GetMapping("/{publicProcurementId}/publicProcurementId")
+    public ResponseEntity<List<Document>> findByPublicProcurementId(@PathVariable @NotNull UUID publicProcurementId) {
+        return ResponseEntity.ok(documentUseCases.findByPublicProcurementId(publicProcurementId));
+    }
+
+    @GetMapping("/{string}/name")
+    public ResponseEntity<List<Document>> findByName(@PathVariable String string) {
+        return ResponseEntity.ok(documentUseCases.findByName(string));
+    }
+
+    @GetMapping("/{string}/type")
+    public ResponseEntity<List<Document>> findByType(@PathVariable String string) {
+        return ResponseEntity.ok(documentUseCases.findByType(string));
+    }
+
+    @GetMapping("/extracted/{extracted}")
+    public ResponseEntity<List<Document>> findByExtracted(@PathVariable boolean extracted) {
+        return ResponseEntity.ok(documentUseCases.findByExtracted(extracted));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Document> update(@PathVariable @NotNull UUID id, @RequestBody CreateDocumentInput document) {
+        return ResponseEntity.ok(documentUseCases.updateById(id, document));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        documentUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
 }

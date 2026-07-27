@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class AssociationUseCasesImplementation implements AssociationUseCases {
-    AssociationRepository associationRepository;
+    private final AssociationRepository associationRepository;
 
     public AssociationUseCasesImplementation(AssociationRepository associationRepository) {
         this.associationRepository = associationRepository;
@@ -40,5 +40,30 @@ public class AssociationUseCasesImplementation implements AssociationUseCases {
     @Override
     public Optional<Association> findById(UUID id) {
         return associationRepository.findById(id);
+    }
+
+    @Override
+    public List<Association> findByActorId(UUID id) {
+        return associationRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Association> findByType(String string) {
+        return associationRepository.findByType(string);
+    }
+
+    @Override
+    public List<Association> findEndedAssociations() {
+        return associationRepository.findEndedAssociations();
+    }
+
+    @Override
+    public Association updateById(UUID id, CreateAssociationInput association) {
+        return associationRepository.updateById(id, association);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        associationRepository.deleteById(id);
     }
 }

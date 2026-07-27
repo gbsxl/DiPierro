@@ -22,7 +22,7 @@ public class AssociationController {
         this.associationUseCases = associationUseCases;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid CreateAssociationInput createAssociationInput) {
         associationUseCases.createAssociation(createAssociationInput);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -39,5 +39,33 @@ public class AssociationController {
     @GetMapping
     public ResponseEntity<List<Association>> findAll() {
         return ResponseEntity.ok(associationUseCases.findAll());
+    }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<List<Association>> findByActorId(@PathVariable @NotNull UUID actorId) {
+        List<Association> associationList = associationUseCases.findByActorId(actorId);
+        return ResponseEntity.ok(associationList);
+    }
+
+    @GetMapping("/{string}/type")
+    public ResponseEntity<List<Association>> findByType(@PathVariable String string) {
+        List<Association> associationList = associationUseCases.findByType(string);
+        return ResponseEntity.ok(associationList);
+    }
+
+    @GetMapping("/ended")
+    public ResponseEntity<List<Association>> findEndedAssociations() {
+        return ResponseEntity.ok(associationUseCases.findEndedAssociations());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Association> update(@PathVariable @NotNull UUID id, @RequestBody CreateAssociationInput association) {
+        return ResponseEntity.ok(associationUseCases.updateById(id, association));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        associationUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
     }
 }

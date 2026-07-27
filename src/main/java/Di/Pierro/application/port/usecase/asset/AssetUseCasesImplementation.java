@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class AssetUseCasesImplementation implements AssetUseCases {
-    AssetRepository assetRepository;
+    private final AssetRepository assetRepository;
 
     public AssetUseCasesImplementation(AssetRepository assetRepository) {
         this.assetRepository = assetRepository;
@@ -40,5 +40,25 @@ public class AssetUseCasesImplementation implements AssetUseCases {
     @Override
     public Optional<Asset> findById(UUID id) {
         return assetRepository.findById(id);
+    }
+
+    @Override
+    public List<Asset> findByType(String string) {
+        return assetRepository.findByType(string);
+    }
+
+    @Override
+    public List<Asset> findByStillHaveIt(boolean stillHaveIt) {
+        return assetRepository.findByStillHaveIt(stillHaveIt);
+    }
+
+    @Override
+    public Asset updateById(UUID id, CreateAssetInput asset) {
+        return assetRepository.updateById(id, asset);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        assetRepository.deleteById(id);
     }
 }

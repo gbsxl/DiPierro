@@ -11,4 +11,9 @@ public interface DocumentMentionUseCases {
     void createDocumentMention(CreateDocumentMentionInput createDocumentMentionInput);
     List<DocumentMention> findAll();
     Optional<DocumentMention> findById(UUID id);
+    List<DocumentMention> findByActorId(UUID id);
+    List<DocumentMention> findByDocumentId(UUID id);
+    List<DocumentMention> findByExtractedName(String string);
+    DocumentMention updateById(UUID id, CreateDocumentMentionInput documentMention);
+    void deleteById(UUID id);
 }

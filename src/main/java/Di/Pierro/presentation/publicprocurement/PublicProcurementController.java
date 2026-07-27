@@ -1,6 +1,7 @@
 package Di.Pierro.presentation.publicprocurement;
 
 import Di.Pierro.application.dto.publicprocurement.CreatePublicProcurementInput;
+import Di.Pierro.application.dto.publicprocurement.PublicProcurementFilter;
 import Di.Pierro.application.port.input.PublicProcurementUseCases;
 import Di.Pierro.domain.model.PublicProcurement;
 import jakarta.validation.Valid;
@@ -37,5 +38,26 @@ public class PublicProcurementController {
     @GetMapping
     public ResponseEntity<List<PublicProcurement>> findAll() {
         return ResponseEntity.ok(publicProcurementUseCases.findAll());
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<PublicProcurement>> findByFilter(PublicProcurementFilter publicProcurementFilter) {
+        return ResponseEntity.ok(publicProcurementUseCases.findByFilter(publicProcurementFilter));
+    }
+
+    @GetMapping("/{actorId}/actorId")
+    public ResponseEntity<Optional<PublicProcurement>> findByActorId(@PathVariable UUID actorId){
+        return ResponseEntity.ok(publicProcurementUseCases.findByActorId(actorId));
+    }
+
+    @PutMapping
+    public ResponseEntity<PublicProcurement> updateById(UUID id, CreatePublicProcurementInput procurementInput){
+        return ResponseEntity.ok(publicProcurementUseCases.updateById(id, procurementInput));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(UUID id){
+        publicProcurementUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
     }
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ActorUseCases {
-    void createActor();
+    Actor createActor();
     List<Actor> findAll();
     Optional<Actor> findById(UUID id);
 }

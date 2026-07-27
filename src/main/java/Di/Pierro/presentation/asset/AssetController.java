@@ -38,4 +38,25 @@ public class AssetController {
     public ResponseEntity<List<Asset>> findAll() {
         return ResponseEntity.ok(assetUseCases.findAll());
     }
+
+    @GetMapping("/{string}/type")
+    public ResponseEntity<List<Asset>> findByType(@PathVariable String string) {
+        return ResponseEntity.ok(assetUseCases.findByType(string));
+    }
+
+    @GetMapping("/stillHaveIt/{stillHaveIt}")
+    public ResponseEntity<List<Asset>> findByStillHaveIt(@PathVariable boolean stillHaveIt) {
+        return ResponseEntity.ok(assetUseCases.findByStillHaveIt(stillHaveIt));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Asset> update(@PathVariable @NotNull UUID id, @RequestBody CreateAssetInput asset) {
+        return ResponseEntity.ok(assetUseCases.updateById(id, asset));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        assetUseCases.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
 }

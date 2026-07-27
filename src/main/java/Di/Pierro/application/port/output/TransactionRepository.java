@@ -1,5 +1,6 @@
 package Di.Pierro.application.port.output;
 
+import Di.Pierro.application.dto.transaction.TransactionFilter;
 import Di.Pierro.domain.model.Transaction;
 
 import java.util.List;
@@ -10,4 +11,6 @@ public interface TransactionRepository {
     void save(Transaction transaction, UUID actorSenderId, UUID actorReceiver);
     Optional<Transaction> findById(UUID id);
     List<Transaction> findAll();
+    List<Transaction> findByFilter(TransactionFilter filter);
+    void deleteById(UUID id);
 }
