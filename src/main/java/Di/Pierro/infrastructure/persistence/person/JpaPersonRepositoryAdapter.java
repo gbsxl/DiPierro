@@ -4,9 +4,11 @@ import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.domain.enums.Gender;
 import Di.Pierro.domain.model.Person;
+import Di.Pierro.infrastructure.exception.custom.PersonException;
 import Di.Pierro.infrastructure.mapper.PersonMapper;
 import Di.Pierro.infrastructure.persistence.entity.PersonEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -43,7 +45,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
     @Override
     public List<Person> findByEmail(String string) {
         if (string == null || string.trim().length() < 3) {
-            return List.of();
+            throw new PersonException(
+                    HttpStatus.BAD_REQUEST,
+                    "invalid email",
+                    "email is null or too small"
+            );
         }
 
         return map(jpaPersonRepository.findTop100ByEmailContainingIgnoreCase(string.trim()));
@@ -52,7 +58,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
     @Override
     public List<Person> findByCompleteName(String string) {
         if (string == null || string.trim().length() < 3) {
-            return List.of();
+            throw new PersonException(
+                    HttpStatus.BAD_REQUEST,
+                    "invalid name",
+                    "name is null or too small"
+            );
         }
 
         return map(jpaPersonRepository.findTop100ByCompleteNameContainingIgnoreCase(string.trim()));
@@ -60,7 +70,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
     @Override
     public List<Person> findByCPF(String string) {
         if (string == null || string.isBlank()) {
-            return List.of();
+            throw new PersonException(
+                    HttpStatus.BAD_REQUEST,
+                    "invalid cpf",
+                    "cpf is null or too small"
+            );
         }
 
         String sqlPattern = string.replaceAll("[Xx*?-]", "_");
@@ -70,7 +84,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
         }
 
         if (sqlPattern.equals("___________") || sqlPattern.equals("%")) {
-            return List.of();
+            throw new PersonException(
+                    HttpStatus.BAD_REQUEST,
+                    "invalid cpf",
+                    "cpf incorrect format, this field cannot be " + string
+            );
         }
 
         return map(jpaPersonRepository.findTop100ByCpfLike(sqlPattern));
@@ -80,7 +98,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
     public List<Person> findByGender(String string) {
         Gender gender = Gender.from(string);
 
-        if(gender.isUndefined()) return List.of();
+        if(gender.isUndefined()) throw new PersonException(
+                HttpStatus.BAD_REQUEST,
+                "invalid gender",
+                "genre was not understood"
+        );
 
         return map(jpaPersonRepository.findByGender(gender));
     }
@@ -100,7 +122,11 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
             return personMapper.toDomain(personOriginal.get());
         }
 
-        return new Person();
+        throw new PersonException(
+                HttpStatus.NOT_FOUND,
+                "person not found",
+                "id not found"
+        );
     }
 
     @Override
