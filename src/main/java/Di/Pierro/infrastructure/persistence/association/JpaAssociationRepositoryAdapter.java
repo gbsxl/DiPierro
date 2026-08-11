@@ -6,9 +6,12 @@ import Di.Pierro.application.port.output.AssociationRepository;
 import Di.Pierro.domain.enums.AssociationType;
 import Di.Pierro.domain.model.Actor;
 import Di.Pierro.domain.model.Association;
+import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 import Di.Pierro.infrastructure.mapper.AssociationMapper;
 import Di.Pierro.infrastructure.persistence.entity.AssociationEntity;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -21,6 +24,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JpaAssociationRepositoryAdapter implements AssociationRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(JpaAssociationRepositoryAdapter.class);
+
     private final JpaAssociationRepository jpaAssociationRepository;
     private final AssociationMapper associationMapper;
     private final ActorRepository actorRepository;
@@ -29,66 +34,63 @@ public class JpaAssociationRepositoryAdapter implements AssociationRepository {
     public void save(Association association, UUID firstActor, UUID secondActor) {
         getActorById(firstActor).ifPresent(association::setFirstActor);
         getActorById(secondActor).ifPresent(association::setSecondActor);
-        AssociationEntity associationEntity = associationMapper.toEntity(association);
-        jpaAssociationRepository.save(associationEntity);
+        log.debug("Saving association between actorId={} and actorId={}", firstActor, secondActor);
+        jpaAssociationRepository.save(associationMapper.toEntity(association));
     }
 
     @Override
     public Optional<Association> findById(UUID id) {
-        return jpaAssociationRepository
-                .findById(id)
-                .map(associationMapper::toDomain);
+        log.debug("Looking up association by id={}", id);
+        return jpaAssociationRepository.findById(id).map(associationMapper::toDomain);
     }
 
     @Override
     public List<Association> findAll() {
-        return jpaAssociationRepository
-                .findAll()
-                .stream()
-                .map(associationMapper::toDomain)
-                .toList();
+        log.debug("Fetching all associations");
+        return jpaAssociationRepository.findAll().stream().map(associationMapper::toDomain).toList();
     }
 
     @Override
     public List<Association> findByActorId(UUID id) {
+        log.debug("Searching associations by actorId={}", id);
         return map(jpaAssociationRepository.findByFirstActorIdOrSecondActorId(id, id));
     }
 
     @Override
     public List<Association> findByType(String string) {
         AssociationType type = AssociationType.fromCode(string);
-
         if (type == AssociationType.LIGACAO_SEM_CLASSIFICACAO) return List.of();
-
+        log.debug("Searching associations by type={}", type);
         return map(jpaAssociationRepository.findByAssociationType(type));
     }
 
     @Override
     public List<Association> findEndedAssociations() {
+        log.debug("Fetching ended associations");
         return map(jpaAssociationRepository.findByAssociationEnded(true));
     }
 
     @Override
     public Association updateById(UUID id, CreateAssociationInput association) {
-        Optional<AssociationEntity> original = jpaAssociationRepository.findById(id);
-        original.ifPresent(value -> value.setAssociationType(AssociationType.fromCode(association.associationType())));
-        original.ifPresent(value -> value.setSource(association.source()));
-        original.ifPresent(value -> value.setConfidenceLevel(association.confidenceLevel()));
-        original.ifPresent(value -> value.setAssociationEnded(association.associationEnded()));
-        original.ifPresent(value -> value.setAssociationStart(association.associationStart()));
-        original.ifPresent(value -> value.setAssociationEnd(association.associationEnd()));
-        original.ifPresent(value -> value.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC)));
+        AssociationEntity entity = jpaAssociationRepository.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.of("association.not-found", "Association", id));
 
-        if (original.isPresent()) {
-            jpaAssociationRepository.save(original.get());
-            return associationMapper.toDomain(original.get());
-        }
+        entity.setAssociationType(AssociationType.fromCode(association.associationType()));
+        entity.setSource(association.source());
+        entity.setConfidenceLevel(association.confidenceLevel());
+        entity.setAssociationEnded(association.associationEnded());
+        entity.setAssociationStart(association.associationStart());
+        entity.setAssociationEnd(association.associationEnd());
+        entity.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
 
-        return new Association();
+        log.debug("Updating association id={}", id);
+        jpaAssociationRepository.save(entity);
+        return associationMapper.toDomain(entity);
     }
 
     @Override
     public void deleteById(UUID id) {
+        log.debug("Deleting association id={}", id);
         jpaAssociationRepository.deleteById(id);
     }
 
@@ -97,8 +99,6 @@ public class JpaAssociationRepositoryAdapter implements AssociationRepository {
     }
 
     private List<Association> map(List<AssociationEntity> entities) {
-        return entities.stream()
-                .map(associationMapper::toDomain)
-                .toList();
+        return entities.stream().map(associationMapper::toDomain).toList();
     }
 }
