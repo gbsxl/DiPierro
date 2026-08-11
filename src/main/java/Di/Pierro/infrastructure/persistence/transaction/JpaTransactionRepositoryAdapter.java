@@ -8,6 +8,8 @@ import Di.Pierro.domain.model.Transaction;
 import Di.Pierro.infrastructure.mapper.TransactionMapper;
 import Di.Pierro.infrastructure.persistence.entity.TransactionEntity;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -19,130 +21,66 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JpaTransactionRepositoryAdapter implements TransactionRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(JpaTransactionRepositoryAdapter.class);
+
     private final JpaTransactionRepository jpaTransactionRepository;
     private final TransactionMapper transactionMapper;
     private final ActorRepository actorRepository;
 
     @Override
-    public void save(Transaction transaction, UUID actorSenderId, UUID actorReceiver) {
+    public void save(Transaction transaction, UUID actorSenderId, UUID actorReceiverId) {
         getActorById(actorSenderId).ifPresent(transaction::setActorSender);
-        getActorById(actorReceiver).ifPresent(transaction::setActorReceiver);
-
-        TransactionEntity transactionEntity = transactionMapper.toEntity(transaction);
-
-        jpaTransactionRepository.save(transactionEntity);
+        getActorById(actorReceiverId).ifPresent(transaction::setActorReceiver);
+        log.debug("Saving transaction senderId={} receiverId={}", actorSenderId, actorReceiverId);
+        jpaTransactionRepository.save(transactionMapper.toEntity(transaction));
     }
 
     @Override
     public Optional<Transaction> findById(UUID id) {
-        return jpaTransactionRepository
-                .findById(id)
-                .map(transactionMapper::toDomain);
+        log.debug("Looking up transaction by id={}", id);
+        return jpaTransactionRepository.findById(id).map(transactionMapper::toDomain);
     }
 
     @Override
     public List<Transaction> findAll() {
-        return jpaTransactionRepository
-                .findAll()
-                .stream()
-                .map(transactionMapper::toDomain)
-                .toList();
+        log.debug("Fetching all transactions");
+        return jpaTransactionRepository.findAll().stream().map(transactionMapper::toDomain).toList();
     }
 
     @Override
     public List<Transaction> findByFilter(TransactionFilter filter) {
+        log.debug("Searching transactions by filter={}", filter);
         Specification<TransactionEntity> spec = Specification.unrestricted();
 
         if (filter.senderId() != null) {
-            spec = spec.and(
-                    TransactionSpecifications.hasSender(
-                            filter.senderId()
-                    )
-            );
+            spec = spec.and(TransactionSpecifications.hasSender(filter.senderId()));
         }
-
         if (filter.receiverId() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.hasReceiver(
-                            filter.receiverId()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.hasReceiver(filter.receiverId()));
         }
-
         if (filter.currency() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.hasCurrency(
-                            filter.currency()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.hasCurrency(filter.currency()));
         }
-
         if (filter.minimumValue() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.minimumValue(
-                            filter.minimumValue()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.minimumValue(filter.minimumValue()));
         }
-
         if (filter.maximumValue() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.maximumValue(
-                            filter.maximumValue()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.maximumValue(filter.maximumValue()));
         }
-
         if (filter.minimumDate() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.beforeDate(
-                            filter.minimumDate()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.beforeDate(filter.minimumDate()));
         }
-
         if (filter.maximumDate() != null) {
-
-            spec = spec.and(
-                    TransactionSpecifications.afterDate(
-                            filter.maximumDate()
-                    )
-            );
-
+            spec = spec.and(TransactionSpecifications.afterDate(filter.maximumDate()));
         }
-
         if (filter.senderIds() != null) {
-            spec = spec.and(
-                    TransactionSpecifications.hasSenderIds(
-                            filter.senderIds()
-                    )
-            );
+            spec = spec.and(TransactionSpecifications.hasSenderIds(filter.senderIds()));
         }
-
         if (filter.receiverIds() != null) {
-            spec = spec.and(
-                    TransactionSpecifications.hasReceiverIds(
-                            filter.receiverIds()
-                    )
-            );
+            spec = spec.and(TransactionSpecifications.hasReceiverIds(filter.receiverIds()));
         }
-
         if (filter.participantIds() != null) {
-            spec = spec.and(
-                    TransactionSpecifications.hasParticipantIds(
-                            filter.participantIds()
-                    )
-            );
+            spec = spec.and(TransactionSpecifications.hasParticipantIds(filter.participantIds()));
         }
 
         return jpaTransactionRepository.findAll(spec).stream().map(transactionMapper::toDomain).toList();
@@ -150,10 +88,11 @@ public class JpaTransactionRepositoryAdapter implements TransactionRepository {
 
     @Override
     public void deleteById(UUID id) {
+        log.debug("Deleting transaction id={}", id);
         jpaTransactionRepository.deleteById(id);
     }
 
-    private Optional<Actor> getActorById(UUID id){
+    private Optional<Actor> getActorById(UUID id) {
         return actorRepository.findById(id);
     }
 }

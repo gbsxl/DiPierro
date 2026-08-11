@@ -3,19 +3,24 @@ package Di.Pierro.presentation.person;
 import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.application.port.input.PersonUseCases;
 import Di.Pierro.domain.model.Person;
+import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/person")
 public class PersonController {
+
+    private static final Logger log = LoggerFactory.getLogger(PersonController.class);
+
     private final PersonUseCases personUseCases;
 
     public PersonController(PersonUseCases personUseCases) {
@@ -24,58 +29,67 @@ public class PersonController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid CreatePersonInput personInput) {
+        log.info("Creating person");
         personUseCases.createPerson(personInput);
+        log.info("Person created successfully");
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable @NotNull UUID id) {
-        Optional<Person> optionalPerson = personUseCases.findById(id);
-        return optionalPerson.map(person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
+        log.debug("Finding person by id={}", id);
+        return personUseCases.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> ResourceNotFoundException.of("person.not-found", "Person", id));
     }
 
     @GetMapping
     public ResponseEntity<List<Person>> findAll() {
+        log.debug("Fetching all persons");
         return ResponseEntity.ok(personUseCases.findAll());
     }
 
     @GetMapping("/{actorId}/actorId")
-    public ResponseEntity<Person> findByActorId(@PathVariable @NotNull UUID actorId){
-        Optional<Person> optionalPerson = personUseCases.findByActorId(actorId);
-        return optionalPerson.map(person -> ResponseEntity.ok(optionalPerson.get())).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Person> findByActorId(@PathVariable @NotNull UUID actorId) {
+        log.debug("Finding person by actorId={}", actorId);
+        return personUseCases.findByActorId(actorId)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> ResourceNotFoundException.of("person.not-found", "Person", actorId));
     }
 
     @GetMapping("/{string}/completeName")
-    public ResponseEntity<List<Person>> findByCompleteName(@PathVariable String string){
-        List<Person> personList = personUseCases.findByCompleteName(string);
-        return ResponseEntity.ok(personList);
+    public ResponseEntity<List<Person>> findByCompleteName(@PathVariable String string) {
+        log.debug("Searching persons by completeName='{}'", string);
+        return ResponseEntity.ok(personUseCases.findByCompleteName(string));
     }
 
     @GetMapping("/{string}/cpf")
-    public ResponseEntity<List<Person>> findByCpf(@PathVariable String string){
-        List<Person> personList = personUseCases.findByCPF(string);
-        return ResponseEntity.ok(personList);
+    public ResponseEntity<List<Person>> findByCpf(@PathVariable String string) {
+        log.debug("Searching persons by CPF pattern='{}'", string);
+        return ResponseEntity.ok(personUseCases.findByCPF(string));
     }
 
     @GetMapping("/{string}/gender")
-    public ResponseEntity<List<Person>> findByGender(@PathVariable String string){
-        List<Person> personList = personUseCases.findByGender(string);
-        return ResponseEntity.ok(personList);
+    public ResponseEntity<List<Person>> findByGender(@PathVariable String string) {
+        log.debug("Searching persons by gender='{}'", string);
+        return ResponseEntity.ok(personUseCases.findByGender(string));
     }
 
     @GetMapping("/{string}/email")
-    public ResponseEntity<List<Person>> findByEmail(@PathVariable String string){
-        List<Person> personList = personUseCases.findByEmail(string);
-        return ResponseEntity.ok(personList);
+    public ResponseEntity<List<Person>> findByEmail(@PathVariable String string) {
+        log.debug("Searching persons by email='{}'", string);
+        return ResponseEntity.ok(personUseCases.findByEmail(string));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Person> update(@PathVariable @NotNull UUID id, @RequestBody CreatePersonInput person){
+    public ResponseEntity<Person> update(@PathVariable @NotNull UUID id, @RequestBody @Valid CreatePersonInput person) {
+        log.info("Updating person id={}", id);
         return ResponseEntity.ok(personUseCases.updateById(id, person));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id){
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull UUID id) {
+        log.info("Deleting person id={}", id);
         personUseCases.deleteById(id);
         return ResponseEntity.accepted().build();
     }

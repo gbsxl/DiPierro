@@ -1,0 +1,40 @@
+dipierro:
+  exceptions:
+    person:
+      email-too-short: "Search term for email must have at least 3 characters."
+      name-too-short: "Search term for name must have at least 3 characters."
+      cpf-blank: "CPF cannot be blank."
+      cpf-invalid-wildcard: "CPF cannot be a full wildcard pattern."
+      gender-undefined: "Gender value was not recognized."
+      not-found: "Person not found with id: {id}"
+    business:
+      name-too-short: "Search term for name must have at least 3 characters."
+      cnpj-blank: "CNPJ cannot be blank."
+      cnpj-invalid-wildcard: "CNPJ cannot be a full wildcard pattern."
+      phone-too-short: "Search term for phone number must have at least 3 characters."
+      email-too-short: "Search term for email must have at least 3 characters."
+      not-found: "Business not found with id: {id}"
+    asset:
+      not-found: "Asset not found with id: {id}"
+      person-not-found: "Person not found for the given id. Asset was not saved."
+    association:
+      not-found: "Association not found with id: {id}"
+    document:
+      not-found: "Document not found with id: {id}"
+      procurement-not-found: "PublicProcurement not found for the given id. Document was not saved."
+    document-mention:
+      not-found: "DocumentMention not found with id: {id}"
+      document-not-found: "Document not found for the given id. DocumentMention was not saved."
+      actor-not-found: "Actor not found for the given id. DocumentMention was not saved."
+    public-procurement:
+      not-found: "PublicProcurement not found with id: {id}"
+    red-flag:
+      not-found: "RedFlag not found with id: {id}"
+    actor-indicator:
+      not-found: "ActorIndicator not found with id: {id}"
+      actor-not-found: "Actor not found for the given id. ActorIndicator was not saved."
+    generic:
+      internal-error: "An unexpected error occurred. If the problem persists, contact support with the traceId."
+      bad-gateway: "Failed to communicate with an external service."
+      data-integrity: "The operation violates an integrity constraint (duplicate record or invalid reference)."
+      invalid-path: "The requested route or resource does not exist on this server."
