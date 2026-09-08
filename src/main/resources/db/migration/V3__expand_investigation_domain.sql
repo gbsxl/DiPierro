@@ -74,7 +74,7 @@ CREATE TABLE actor_indicators (
 CREATE TABLE red_flags(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     actors_id UUID,
-    public_procurement_id UUID,
+    public_ procurement_id UUID,
     transaction_id UUID,
     association_id UUID,
     type VARCHAR(255),

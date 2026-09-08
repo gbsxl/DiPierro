@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -36,16 +37,29 @@ public class BusinessEntity {
     @Column(name = "is_public_company")
     private boolean isPublicCompany;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "capital_stock")
     private BigDecimal capitalStock;
 
     @Column(name = "estimated_net_worth")
     private BigDecimal estimatedNetWorth;
 
-    @OneToOne
+    @Column(name = "open_date")
+    private LocalDate openDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "actors_id", nullable = false, unique = true)
     private ActorEntity actor;
+
+    public AddressEntity getAddress() {
+        return actor != null ? actor.getAddress() : null;
+    }
+
+    public void setAddress(AddressEntity address) {
+        if (actor != null) {
+            actor.setAddress(address);
+            if (address != null) {
+                address.setActor(actor);
+            }
+        }
+    }
 }

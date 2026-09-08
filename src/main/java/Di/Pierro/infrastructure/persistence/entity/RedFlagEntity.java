@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,9 +32,14 @@ public class RedFlagEntity {
     @Column(name = "detected_at", nullable = false)
     private OffsetDateTime detectedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "actors_id")
-    private ActorEntity actor;
+    @ManyToMany
+    @JoinTable(
+        name = "red_flags_actors",
+        joinColumns = @JoinColumn(name = "red_flag_id"),
+        inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    @Builder.Default
+    private List<ActorEntity> actors = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "public_procurement_id")

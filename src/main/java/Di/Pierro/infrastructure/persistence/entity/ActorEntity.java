@@ -27,4 +27,7 @@ public class ActorEntity {
 
     @Column(name = "is_active")
     private boolean active;
+
+    @OneToOne(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AddressEntity address;
 }
