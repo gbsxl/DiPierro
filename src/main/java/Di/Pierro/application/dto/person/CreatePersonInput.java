@@ -1,10 +1,15 @@
 package Di.Pierro.application.dto.person;
 
+import Di.Pierro.application.dto.address.CreateAddressInput;
+import Di.Pierro.application.validators.cpf.CPF;
 import Di.Pierro.domain.enums.Gender;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 public record CreatePersonInput(
         @NotBlank
@@ -12,9 +17,11 @@ public record CreatePersonInput(
         String completeName,
 
         @Size(min = 11, max = 11)
+        @CPF
         String cpf,
 
-        String address,
+        @Valid
+        CreateAddressInput address,
 
         Gender gender,
 
@@ -23,6 +30,10 @@ public record CreatePersonInput(
 
         @Size(max = 150)
         @Email
-        String email
+        String email,
+
+        Boolean isAlive,
+
+        LocalDate deathDate
 ) {
 }

@@ -1,6 +1,7 @@
 package Di.Pierro.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class Business {
@@ -11,15 +12,16 @@ public class Business {
     private String phoneNumber;
     private String email;
     private boolean publicCompany;
-    private String address;
+    private Address address;
     private BigDecimal estimatedNetWorth;
     private BigDecimal capitalStock;
+    private LocalDate openDate;
     private Actor actor;
 
     public Business() {
     }
 
-    public Business(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, String address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, Actor actor) {
+    public Business(String legalName, String cnpj, String fantasyName, String phoneNumber, String email, boolean publicCompany, Address address, BigDecimal estimatedNetWorth, BigDecimal capitalStock, LocalDate openDate, Actor actor) {
         this.id = UUID.randomUUID();
         this.legalName = legalName;
         this.cnpj = cnpj;
@@ -27,10 +29,11 @@ public class Business {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.publicCompany = publicCompany;
-        this.address = address;
         this.estimatedNetWorth = estimatedNetWorth;
         this.capitalStock = capitalStock;
+        this.openDate = openDate;
         this.actor = actor;
+        setAddress(address);
     }
 
     public UUID getId() {
@@ -95,13 +98,22 @@ public class Business {
 
     public void setActor(Actor actor) {
         this.actor = actor;
+        if (this.address != null && actor != null) {
+            this.address.setActor(actor);
+        }
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
+        if (address != null) {
+            Address.validateEntityAssociation(this);
+            if (this.actor != null) {
+                address.setActor(this.actor);
+            }
+        }
         this.address = address;
     }
 
@@ -119,5 +131,13 @@ public class Business {
 
     public void setCapitalStock(BigDecimal capitalStock) {
         this.capitalStock = capitalStock;
+    }
+
+    public LocalDate getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(LocalDate openDate) {
+        this.openDate = openDate;
     }
 }

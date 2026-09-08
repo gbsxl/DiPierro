@@ -2,6 +2,8 @@ package Di.Pierro.domain.model;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class RedFlag {
@@ -10,7 +12,7 @@ public class RedFlag {
     private Integer severity;
     private String description;
     private OffsetDateTime detectedAt;
-    private Actor actor;
+    private List<Actor> actors = new ArrayList<>();
     private PublicProcurement publicProcurement;
     private UUID transactionId;
     private UUID associationId;
@@ -19,7 +21,7 @@ public class RedFlag {
             String type,
             Integer severity,
             String description,
-            Actor actor,
+            List<Actor> actors,
             PublicProcurement publicProcurement,
             UUID transactionId,
             UUID associationId
@@ -30,7 +32,7 @@ public class RedFlag {
                 severity,
                 description,
                 OffsetDateTime.now(ZoneOffset.UTC),
-                actor,
+                actors,
                 publicProcurement,
                 transactionId,
                 associationId
@@ -40,13 +42,13 @@ public class RedFlag {
     public RedFlag() {
     }
 
-    public RedFlag(UUID id, String type, Integer severity, String description, OffsetDateTime detectedAt, Actor actor, PublicProcurement publicProcurement, UUID transactionId, UUID associationId) {
+    public RedFlag(UUID id, String type, Integer severity, String description, OffsetDateTime detectedAt, List<Actor> actors, PublicProcurement publicProcurement, UUID transactionId, UUID associationId) {
         this.id = id;
         this.type = type;
         this.severity = severity;
         this.description = description;
         this.detectedAt = detectedAt;
-        this.actor = actor;
+        this.actors = actors != null ? actors : new ArrayList<>();
         this.publicProcurement = publicProcurement;
         this.transactionId = transactionId;
         this.associationId = associationId;
@@ -92,12 +94,12 @@ public class RedFlag {
         this.detectedAt = detectedAt;
     }
 
-    public Actor getActor() {
-        return actor;
+    public List<Actor> getActors() {
+        return actors;
     }
 
-    public void setActor(Actor actor) {
-        this.actor = actor;
+    public void setActors(List<Actor> actors) {
+        this.actors = actors != null ? actors : new ArrayList<>();
     }
 
     public PublicProcurement getPublicProcurement() {
