@@ -2,10 +2,12 @@ package Di.Pierro.infrastructure.persistence.business;
 
 import Di.Pierro.application.dto.business.CreateBusinessInput;
 import Di.Pierro.application.port.output.BusinessRepository;
+import Di.Pierro.domain.enums.State;
 import Di.Pierro.domain.model.Business;
 import Di.Pierro.infrastructure.exception.custom.BadRequestException;
 import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 import Di.Pierro.infrastructure.mapper.BusinessMapper;
+import Di.Pierro.infrastructure.persistence.entity.AddressEntity;
 import Di.Pierro.infrastructure.persistence.entity.BusinessEntity;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -44,9 +46,23 @@ public class JpaBusinessRepositoryAdapter implements BusinessRepository {
     }
 
     @Override
+    public List<Business> findAllByIds(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        log.debug("Fetching businesses by ids list count={}", ids.size());
+        return map(jpaBusinessRepository.findAllById(ids));
+    }
+
+    @Override
     public Optional<Business> findByActorId(UUID id) {
         log.debug("Looking up business by actorId={}", id);
         return jpaBusinessRepository.findByActorId(id).map(businessMapper::toDomain);
+    }
+
+    @Override
+    public List<Business> findByActorIds(List<UUID> actorIds) {
+        if (actorIds == null || actorIds.isEmpty()) return List.of();
+        log.debug("Fetching businesses by actorIds list count={}", actorIds.size());
+        return map(jpaBusinessRepository.findByActorIdIn(actorIds));
     }
 
     @Override
@@ -115,9 +131,28 @@ public class JpaBusinessRepositoryAdapter implements BusinessRepository {
         entity.setPhoneNumber(business.phoneNumber());
         entity.setEmail(business.email());
         entity.setPublicCompany(business.isPublicCompany());
-        entity.setAddress(business.address());
+
+        AddressEntity addressEntity = null;
+        if (business.address() != null) {
+            AddressEntity existing = entity.getAddress();
+            UUID addressId = existing != null && existing.getId() != null ? existing.getId() : UUID.randomUUID();
+            addressEntity = AddressEntity.builder()
+                    .id(addressId)
+                    .postalCode(business.address().postalCode())
+                    .streetAddress(business.address().streetAddress())
+                    .number(business.address().number())
+                    .complement(business.address().complement())
+                    .neighborhood(business.address().neighborhood())
+                    .city(business.address().city())
+                    .state(business.address().state() != null ? State.fromSigla(business.address().state()) : null)
+                    .actor(entity.getActor())
+                    .build();
+        }
+        entity.setAddress(addressEntity);
+
         entity.setCapitalStock(business.capitalStock());
         entity.setEstimatedNetWorth(business.estimatedNetWorth());
+        entity.setOpenDate(business.openDate());
 
         log.debug("Updating business id={}", id);
         jpaBusinessRepository.save(entity);

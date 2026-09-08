@@ -11,6 +11,7 @@ import java.util.UUID;
 public interface TransactionUseCases {
     void createTransaction(CreateTransactionInput createTransactionInput);
     List<Transaction> findAll();
+    List<Transaction> findAllByIds(List<UUID> ids);
     Optional<Transaction> findById(UUID id);
     List<Transaction> findByFilter(TransactionFilter filter);
     void deleteById(UUID id);

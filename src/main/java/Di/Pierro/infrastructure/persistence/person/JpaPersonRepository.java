@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface JpaPersonRepository extends JpaRepository<PersonEntity, UUID> {
     Optional<PersonEntity> findByActorId(UUID actorId);
+    List<PersonEntity> findByActorIdIn(List<UUID> actorIds);
     List<PersonEntity> findTop100ByEmailContainingIgnoreCase(String email);
     List<PersonEntity> findTop100ByCompleteNameContainingIgnoreCase(String name);
     List<PersonEntity> findTop100ByCpfLike(String cpf);

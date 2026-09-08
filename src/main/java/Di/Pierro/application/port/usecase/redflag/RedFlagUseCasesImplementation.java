@@ -18,7 +18,7 @@ public class RedFlagUseCasesImplementation implements RedFlagUseCases {
     }
 
     @Override
-    public void createRedFlag(CreateRedFlagInput createRedFlagInput) {
+    public RedFlag createRedFlag(CreateRedFlagInput createRedFlagInput) {
         RedFlag redFlag = RedFlag.createRedFlag(
                 createRedFlagInput.type(),
                 createRedFlagInput.severity(),
@@ -28,7 +28,7 @@ public class RedFlagUseCasesImplementation implements RedFlagUseCases {
                 createRedFlagInput.transactionId(),
                 createRedFlagInput.associationId()
         );
-        redFlagRepository.save(redFlag, createRedFlagInput.actorId(), createRedFlagInput.publicProcurementId());
+        return redFlagRepository.save(redFlag, createRedFlagInput.actorIds(), createRedFlagInput.publicProcurementId());
     }
 
     @Override
@@ -44,6 +44,11 @@ public class RedFlagUseCasesImplementation implements RedFlagUseCases {
     @Override
     public List<RedFlag> findByActorId(UUID id) {
         return redFlagRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<RedFlag> findByActorIds(List<UUID> actorIds) {
+        return redFlagRepository.findByActorIds(actorIds);
     }
 
     @Override

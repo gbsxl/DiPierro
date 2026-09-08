@@ -9,10 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RedFlagUseCases {
-    void createRedFlag(CreateRedFlagInput createRedFlagInput);
+    RedFlag createRedFlag(CreateRedFlagInput createRedFlagInput);
     List<RedFlag> findAll();
     Optional<RedFlag> findById(UUID id);
     List<RedFlag> findByActorId(UUID id);
+    List<RedFlag> findByActorIds(List<UUID> actorIds);
     List<RedFlag> findByPublicProcurementId(UUID id);
     List<RedFlag> findByTransactionId(UUID id);
     List<RedFlag> findByAssociationId(UUID id);

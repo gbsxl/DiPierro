@@ -5,6 +5,7 @@ import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.BusinessUseCases;
 import Di.Pierro.application.port.output.BusinessRepository;
 import Di.Pierro.domain.model.Actor;
+import Di.Pierro.domain.model.Address;
 import Di.Pierro.domain.model.Business;
 
 import java.util.List;
@@ -23,6 +24,18 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
     @Override
     public void createBusiness(CreateBusinessInput createBusinessInput) {
         Actor actor = actorUseCases.createActor();
+        Address address = null;
+        if (createBusinessInput.address() != null) {
+            address = new Address(
+                    createBusinessInput.address().postalCode(),
+                    createBusinessInput.address().streetAddress(),
+                    createBusinessInput.address().number(),
+                    createBusinessInput.address().complement(),
+                    createBusinessInput.address().neighborhood(),
+                    createBusinessInput.address().city(),
+                    createBusinessInput.address().state()
+            );
+        }
 
         Business business = new Business(
                 createBusinessInput.legalName(),
@@ -31,9 +44,10 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
                 createBusinessInput.phoneNumber(),
                 createBusinessInput.email(),
                 createBusinessInput.isPublicCompany(),
-                createBusinessInput.address(),
+                address,
                 createBusinessInput.estimatedNetWorth(),
                 createBusinessInput.capitalStock(),
+                createBusinessInput.openDate(),
                 actor
         );
 
@@ -46,6 +60,11 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
     }
 
     @Override
+    public List<Business> findAllByIds(List<UUID> ids) {
+        return businessRepository.findAllByIds(ids);
+    }
+
+    @Override
     public Optional<Business> findById(UUID id) {
         return businessRepository.findById(id);
     }
@@ -53,6 +72,11 @@ public class BusinessUseCasesImplementation implements BusinessUseCases {
     @Override
     public Optional<Business> findByActorId(UUID id) {
         return businessRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Business> findByActorIds(List<UUID> actorIds) {
+        return businessRepository.findByActorIds(actorIds);
     }
 
     @Override

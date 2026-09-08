@@ -11,6 +11,7 @@ import java.util.UUID;
 @Repository
 public interface JpaBusinessRepository extends JpaRepository<BusinessEntity, UUID> {
     Optional<BusinessEntity> findByActorId(UUID actorId);
+    List<BusinessEntity> findByActorIdIn(List<UUID> actorIds);
     List<BusinessEntity> findTop100ByLegalNameContainingIgnoreCaseOrFantasyNameContainingIgnoreCase(String legalName, String fantasyName);
     List<BusinessEntity> findTop100ByCnpjLike(String cnpj);
     List<BusinessEntity> findTop100ByPhoneNumberContainingIgnoreCase(String phoneNumber);

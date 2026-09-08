@@ -11,6 +11,7 @@ public interface AssetRepository {
     void save(Asset asset, UUID personId);
     Optional<Asset> findById(UUID id);
     List<Asset> findAll();
+    List<Asset> findAllByIds(List<UUID> ids);
     List<Asset> findByType(String string);
     List<Asset> findByStillHaveIt(boolean stillHaveIt);
     Asset updateById(UUID id, CreateAssetInput asset);

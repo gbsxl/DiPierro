@@ -5,6 +5,7 @@ import Di.Pierro.application.port.input.ActorUseCases;
 import Di.Pierro.application.port.input.PersonUseCases;
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.domain.model.Actor;
+import Di.Pierro.domain.model.Address;
 import Di.Pierro.domain.model.Person;
 
 import java.util.List;
@@ -23,14 +24,30 @@ public class PersonUseCasesImplementation implements PersonUseCases {
     @Override
     public void createPerson(CreatePersonInput createPersonInput) {
         Actor actor = actorUseCases.createActor();
+        Address address = null;
+        if (createPersonInput.address() != null) {
+            address = new Address(
+                    createPersonInput.address().postalCode(),
+                    createPersonInput.address().streetAddress(),
+                    createPersonInput.address().number(),
+                    createPersonInput.address().complement(),
+                    createPersonInput.address().neighborhood(),
+                    createPersonInput.address().city(),
+                    createPersonInput.address().state()
+            );
+        }
+
+        Boolean isAlive = createPersonInput.isAlive() != null ? createPersonInput.isAlive() : true;
 
         Person person = new Person(
                 createPersonInput.completeName(),
                 createPersonInput.cpf(),
-                createPersonInput.address(),
+                address,
                 createPersonInput.gender(),
                 createPersonInput.phoneNumber(),
                 createPersonInput.email(),
+                isAlive,
+                createPersonInput.deathDate(),
                 actor
         );
         personRepository.save(person);
@@ -42,6 +59,11 @@ public class PersonUseCasesImplementation implements PersonUseCases {
     }
 
     @Override
+    public List<Person> findAllByIds(List<UUID> ids) {
+        return personRepository.findAllByIds(ids);
+    }
+
+    @Override
     public Optional<Person> findById(UUID id) {
         return personRepository.findById(id);
     }
@@ -49,6 +71,11 @@ public class PersonUseCasesImplementation implements PersonUseCases {
     @Override
     public Optional<Person> findByActorId(UUID id) {
         return personRepository.findByActorId(id);
+    }
+
+    @Override
+    public List<Person> findByActorIds(List<UUID> actorIds) {
+        return personRepository.findByActorIds(actorIds);
     }
 
     @Override

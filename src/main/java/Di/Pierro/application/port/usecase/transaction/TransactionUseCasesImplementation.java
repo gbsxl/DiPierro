@@ -35,6 +35,11 @@ public class TransactionUseCasesImplementation implements TransactionUseCases {
     }
 
     @Override
+    public List<Transaction> findAllByIds(List<UUID> ids) {
+        return transactionRepository.findAllByIds(ids);
+    }
+
+    @Override
     public Optional<Transaction> findById(UUID id) {
         return transactionRepository.findById(id);
     }

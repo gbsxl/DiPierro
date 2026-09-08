@@ -3,10 +3,12 @@ package Di.Pierro.infrastructure.persistence.person;
 import Di.Pierro.application.dto.person.CreatePersonInput;
 import Di.Pierro.application.port.output.PersonRepository;
 import Di.Pierro.domain.enums.Gender;
+import Di.Pierro.domain.enums.State;
 import Di.Pierro.domain.model.Person;
 import Di.Pierro.infrastructure.exception.custom.BadRequestException;
 import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 import Di.Pierro.infrastructure.mapper.PersonMapper;
+import Di.Pierro.infrastructure.persistence.entity.AddressEntity;
 import Di.Pierro.infrastructure.persistence.entity.PersonEntity;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -45,9 +47,23 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
     }
 
     @Override
+    public List<Person> findAllByIds(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        log.debug("Fetching persons by ids list count={}", ids.size());
+        return map(jpaPersonRepository.findAllById(ids));
+    }
+
+    @Override
     public Optional<Person> findByActorId(UUID id) {
         log.debug("Looking up person by actorId={}", id);
         return jpaPersonRepository.findByActorId(id).map(personMapper::toDomain);
+    }
+
+    @Override
+    public List<Person> findByActorIds(List<UUID> actorIds) {
+        if (actorIds == null || actorIds.isEmpty()) return List.of();
+        log.debug("Fetching persons by actorIds list count={}", actorIds.size());
+        return map(jpaPersonRepository.findByActorIdIn(actorIds));
     }
 
     @Override
@@ -105,10 +121,32 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
 
         entity.setCompleteName(person.completeName());
         entity.setCpf(person.cpf());
-        entity.setAddress(person.address());
+
+        AddressEntity addressEntity = null;
+        if (person.address() != null) {
+            AddressEntity existing = entity.getAddress();
+            UUID addressId = existing != null && existing.getId() != null ? existing.getId() : UUID.randomUUID();
+            addressEntity = AddressEntity.builder()
+                    .id(addressId)
+                    .postalCode(person.address().postalCode())
+                    .streetAddress(person.address().streetAddress())
+                    .number(person.address().number())
+                    .complement(person.address().complement())
+                    .neighborhood(person.address().neighborhood())
+                    .city(person.address().city())
+                    .state(person.address().state() != null ? State.fromSigla(person.address().state()) : null)
+                    .actor(entity.getActor())
+                    .build();
+        }
+        entity.setAddress(addressEntity);
+
         entity.setGender(person.gender());
         entity.setPhoneNumber(person.phoneNumber());
         entity.setEmail(person.email());
+        if (person.isAlive() != null) {
+            entity.setIsAlive(person.isAlive());
+        }
+        entity.setDeathDate(person.deathDate());
 
         log.debug("Updating person id={}", id);
         jpaPersonRepository.save(entity);

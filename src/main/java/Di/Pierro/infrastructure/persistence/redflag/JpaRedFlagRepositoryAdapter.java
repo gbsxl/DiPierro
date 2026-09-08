@@ -9,6 +9,7 @@ import Di.Pierro.domain.model.RedFlag;
 import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 import Di.Pierro.infrastructure.mapper.PublicProcurementMapper;
 import Di.Pierro.infrastructure.mapper.RedFlagMapper;
+import Di.Pierro.infrastructure.persistence.entity.ActorEntity;
 import Di.Pierro.infrastructure.persistence.entity.PublicProcurementEntity;
 import Di.Pierro.infrastructure.persistence.entity.RedFlagEntity;
 import Di.Pierro.infrastructure.persistence.publicprocurement.JpaPublicProcurementRepository;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import Di.Pierro.infrastructure.mapper.ActorMapper;
+
 @Component
 @AllArgsConstructor
 public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
@@ -33,19 +36,25 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
     private final JpaRedFlagRepository jpaRedFlagRepository;
     private final RedFlagMapper redFlagMapper;
     private final PublicProcurementMapper publicProcurementMapper;
+    private final ActorMapper actorMapper;
 
     @Override
-    public void save(RedFlag redFlag, UUID actorId, UUID publicProcurementId) {
-        if (actorId != null) {
-            Optional<Actor> optionalActor = actorRepository.findById(actorId);
-            optionalActor.ifPresent(redFlag::setActor);
+    public RedFlag save(RedFlag redFlag, List<UUID> actorIds, UUID publicProcurementId) {
+        if (actorIds != null && !actorIds.isEmpty()) {
+            List<Actor> actors = actorIds.stream()
+                    .map(actorRepository::findById)
+                    .flatMap(Optional::stream)
+                    .toList();
+            redFlag.setActors(actors);
         }
         if (publicProcurementId != null) {
             Optional<PublicProcurementEntity> optionalProcurement = jpaPublicProcurementRepository.findById(publicProcurementId);
             optionalProcurement.map(publicProcurementMapper::toDomain).ifPresent(redFlag::setPublicProcurement);
         }
-        log.debug("Saving red flag actorId={} publicProcurementId={}", actorId, publicProcurementId);
-        jpaRedFlagRepository.save(redFlagMapper.toEntity(redFlag));
+        log.debug("Saving red flag actorIds={} publicProcurementId={}", actorIds, publicProcurementId);
+
+        RedFlagEntity save = jpaRedFlagRepository.save(redFlagMapper.toEntity(redFlag));
+        return redFlagMapper.toDomain(save);
     }
 
     @Override
@@ -64,6 +73,15 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
     public List<RedFlag> findByActorId(UUID id) {
         log.debug("Searching red flags by actorId={}", id);
         return map(jpaRedFlagRepository.findAll(RedFlagSpecifications.hasActor(id)));
+    }
+
+    @Override
+    public List<RedFlag> findByActorIds(List<UUID> actorIds) {
+        log.debug("Searching red flags by actorIds={}", actorIds);
+        if (actorIds == null || actorIds.isEmpty()) {
+            return List.of();
+        }
+        return map(jpaRedFlagRepository.findAll(RedFlagSpecifications.hasActorIn(actorIds)));
     }
 
     @Override
@@ -107,6 +125,9 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
         if (filter.actorId() != null) {
             spec = spec.and(RedFlagSpecifications.hasActor(filter.actorId()));
         }
+        if (filter.actorIds() != null && !filter.actorIds().isEmpty()) {
+            spec = spec.and(RedFlagSpecifications.hasActorIn(filter.actorIds()));
+        }
         if (filter.publicProcurementId() != null) {
             spec = spec.and(RedFlagSpecifications.hasPublicProcurement(filter.publicProcurementId()));
         }
@@ -136,6 +157,15 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
         entity.setDescription(redFlag.description());
         entity.setTransactionId(redFlag.transactionId());
         entity.setAssociationId(redFlag.associationId());
+
+        if (redFlag.actorIds() != null) {
+            List<ActorEntity> actorEntities = redFlag.actorIds().stream()
+                    .map(actorRepository::findById)
+                    .flatMap(Optional::stream)
+                    .map(actorMapper::toEntity)
+                    .toList();
+            entity.setActors(actorEntities);
+        }
 
         log.debug("Updating red flag id={}", id);
         jpaRedFlagRepository.save(entity);

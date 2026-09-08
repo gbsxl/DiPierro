@@ -10,8 +10,10 @@ import java.util.UUID;
 public interface PersonUseCases {
     void createPerson(CreatePersonInput createPersonInput);
     List<Person> findAll();
+    List<Person> findAllByIds(List<UUID> ids);
     Optional<Person> findById(UUID id);
     Optional<Person> findByActorId(UUID id);
+    List<Person> findByActorIds(List<UUID> actorIds);
     List<Person> findByCompleteName(String string);
     List<Person> findByCPF(String string);
     List<Person> findByGender(String string);

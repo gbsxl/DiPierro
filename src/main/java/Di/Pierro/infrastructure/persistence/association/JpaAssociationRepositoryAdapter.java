@@ -1,5 +1,6 @@
 package Di.Pierro.infrastructure.persistence.association;
 
+import Di.Pierro.application.dto.association.AssociationFilter;
 import Di.Pierro.application.dto.association.CreateAssociationInput;
 import Di.Pierro.application.port.output.ActorRepository;
 import Di.Pierro.application.port.output.AssociationRepository;
@@ -12,6 +13,7 @@ import Di.Pierro.infrastructure.persistence.entity.AssociationEntity;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -48,6 +50,73 @@ public class JpaAssociationRepositoryAdapter implements AssociationRepository {
     public List<Association> findAll() {
         log.debug("Fetching all associations");
         return jpaAssociationRepository.findAll().stream().map(associationMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Association> findAllByIds(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        log.debug("Fetching associations by ids list count={}", ids.size());
+        return map(jpaAssociationRepository.findAllById(ids));
+    }
+
+    @Override
+    public List<Association> findByFilter(AssociationFilter filter) {
+        log.debug("Searching associations by filter={}", filter);
+        Specification<AssociationEntity> spec = Specification.unrestricted();
+
+        if (filter.firstActorId() != null) {
+            spec = spec.and(AssociationSpecifications.hasFirstActorId(filter.firstActorId()));
+        }
+        if (filter.secondActorId() != null) {
+            spec = spec.and(AssociationSpecifications.hasSecondActorId(filter.secondActorId()));
+        }
+        if (filter.firstActorIds() != null && !filter.firstActorIds().isEmpty()) {
+            spec = spec.and(AssociationSpecifications.hasFirstActorIds(filter.firstActorIds()));
+        }
+        if (filter.secondActorIds() != null && !filter.secondActorIds().isEmpty()) {
+            spec = spec.and(AssociationSpecifications.hasSecondActorIds(filter.secondActorIds()));
+        }
+        if (filter.actorId() != null) {
+            spec = spec.and(AssociationSpecifications.hasActorId(filter.actorId()));
+        }
+        if (filter.actorIds() != null && !filter.actorIds().isEmpty()) {
+            spec = spec.and(AssociationSpecifications.hasActorIds(filter.actorIds()));
+        }
+        if (filter.associationType() != null) {
+            spec = spec.and(AssociationSpecifications.hasAssociationType(filter.associationType()));
+        }
+        if (filter.associationTypes() != null && !filter.associationTypes().isEmpty()) {
+            spec = spec.and(AssociationSpecifications.hasAssociationTypes(filter.associationTypes()));
+        }
+        if (filter.source() != null && !filter.source().isBlank()) {
+            spec = spec.and(AssociationSpecifications.containsSource(filter.source()));
+        }
+        if (filter.sources() != null && !filter.sources().isEmpty()) {
+            spec = spec.and(AssociationSpecifications.hasSources(filter.sources()));
+        }
+        if (filter.minimumConfidenceLevel() != null) {
+            spec = spec.and(AssociationSpecifications.minimumConfidenceLevel(filter.minimumConfidenceLevel()));
+        }
+        if (filter.maximumConfidenceLevel() != null) {
+            spec = spec.and(AssociationSpecifications.maximumConfidenceLevel(filter.maximumConfidenceLevel()));
+        }
+        if (filter.associationEnded() != null) {
+            spec = spec.and(AssociationSpecifications.isAssociationEnded(filter.associationEnded()));
+        }
+        if (filter.startAfterDate() != null) {
+            spec = spec.and(AssociationSpecifications.startAfterDate(filter.startAfterDate()));
+        }
+        if (filter.startBeforeDate() != null) {
+            spec = spec.and(AssociationSpecifications.startBeforeDate(filter.startBeforeDate()));
+        }
+        if (filter.endAfterDate() != null) {
+            spec = spec.and(AssociationSpecifications.endAfterDate(filter.endAfterDate()));
+        }
+        if (filter.endBeforeDate() != null) {
+            spec = spec.and(AssociationSpecifications.endBeforeDate(filter.endBeforeDate()));
+        }
+
+        return map(jpaAssociationRepository.findAll(spec));
     }
 
     @Override

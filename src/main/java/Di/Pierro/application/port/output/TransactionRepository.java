@@ -11,6 +11,7 @@ public interface TransactionRepository {
     void save(Transaction transaction, UUID actorSenderId, UUID actorReceiver);
     Optional<Transaction> findById(UUID id);
     List<Transaction> findAll();
+    List<Transaction> findAllByIds(List<UUID> ids);
     List<Transaction> findByFilter(TransactionFilter filter);
     void deleteById(UUID id);
 }

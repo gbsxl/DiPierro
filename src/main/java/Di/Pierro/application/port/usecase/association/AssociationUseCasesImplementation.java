@@ -1,5 +1,6 @@
 package Di.Pierro.application.port.usecase.association;
 
+import Di.Pierro.application.dto.association.AssociationFilter;
 import Di.Pierro.application.dto.association.CreateAssociationInput;
 import Di.Pierro.application.port.input.AssociationUseCases;
 import Di.Pierro.application.port.output.AssociationRepository;
@@ -35,6 +36,16 @@ public class AssociationUseCasesImplementation implements AssociationUseCases {
     @Override
     public List<Association> findAll() {
         return associationRepository.findAll();
+    }
+
+    @Override
+    public List<Association> findAllByIds(List<UUID> ids) {
+        return associationRepository.findAllByIds(ids);
+    }
+
+    @Override
+    public List<Association> findByFilter(AssociationFilter filter) {
+        return associationRepository.findByFilter(filter);
     }
 
     @Override

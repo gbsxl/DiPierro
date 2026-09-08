@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface AssetUseCases {
     void createAsset(CreateAssetInput createAssetInput);
     List<Asset> findAll();
+    List<Asset> findAllByIds(List<UUID> ids);
     Optional<Asset> findById(UUID id);
     List<Asset> findByType(String string);
     List<Asset> findByStillHaveIt(boolean stillHaveIt);

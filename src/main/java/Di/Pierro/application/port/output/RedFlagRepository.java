@@ -9,10 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RedFlagRepository {
-    void save(RedFlag redFlag, UUID actorId, UUID publicProcurementId);
+    RedFlag save(RedFlag redFlag, List<UUID> actorIds, UUID publicProcurementId);
     Optional<RedFlag> findById(UUID id);
     List<RedFlag> findAll();
     List<RedFlag> findByActorId(UUID id);
+    List<RedFlag> findByActorIds(List<UUID> actorIds);
     List<RedFlag> findByPublicProcurementId(UUID id);
     List<RedFlag> findByTransactionId(UUID id);
     List<RedFlag> findByAssociationId(UUID id);

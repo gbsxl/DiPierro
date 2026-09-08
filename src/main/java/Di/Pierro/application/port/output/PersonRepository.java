@@ -11,7 +11,9 @@ public interface PersonRepository {
     void save(Person person);
     Optional<Person> findById(UUID id);
     List<Person> findAll();
+    List<Person> findAllByIds(List<UUID> ids);
     Optional<Person> findByActorId(UUID id);
+    List<Person> findByActorIds(List<UUID> actorIds);
     List<Person> findByCompleteName(String string);
     List<Person> findByCPF(String string);
     List<Person> findByGender(String string);

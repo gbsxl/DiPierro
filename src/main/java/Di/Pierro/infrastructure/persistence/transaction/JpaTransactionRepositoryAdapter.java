@@ -48,6 +48,13 @@ public class JpaTransactionRepositoryAdapter implements TransactionRepository {
     }
 
     @Override
+    public List<Transaction> findAllByIds(List<UUID> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        log.debug("Fetching transactions by ids list count={}", ids.size());
+        return jpaTransactionRepository.findAllById(ids).stream().map(transactionMapper::toDomain).toList();
+    }
+
+    @Override
     public List<Transaction> findByFilter(TransactionFilter filter) {
         log.debug("Searching transactions by filter={}", filter);
         Specification<TransactionEntity> spec = Specification.unrestricted();

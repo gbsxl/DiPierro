@@ -11,7 +11,9 @@ public interface BusinessRepository {
     void save(Business business);
     Optional<Business> findById(UUID id);
     List<Business> findAll();
+    List<Business> findAllByIds(List<UUID> ids);
     Optional<Business> findByActorId(UUID id);
+    List<Business> findByActorIds(List<UUID> actorIds);
     List<Business> findByName(String string);
     List<Business> findByCNPJ(String string);
     List<Business> findByPhoneNumber(String string);
