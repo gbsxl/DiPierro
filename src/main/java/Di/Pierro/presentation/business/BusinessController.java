@@ -41,12 +41,22 @@ public class BusinessController {
         return ResponseEntity.ok(businessUseCases.findAll());
     }
 
+    @PostMapping("/batch/ids")
+    public ResponseEntity<List<Business>> findAllByIds(@RequestBody List<UUID> ids) {
+        return ResponseEntity.ok(businessUseCases.findAllByIds(ids));
+    }
+
     @GetMapping("/{actorId}/actorId")
     public ResponseEntity<Business> findByActorId(@PathVariable @NotNull UUID actorId) {
         Optional<Business> optionalBusiness = businessUseCases.findByActorId(actorId);
         return optionalBusiness.map(
                 business -> ResponseEntity.ok(optionalBusiness.get())
         ).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/batch/actor-ids")
+    public ResponseEntity<List<Business>> findByActorIds(@RequestBody List<UUID> actorIds) {
+        return ResponseEntity.ok(businessUseCases.findByActorIds(actorIds));
     }
 
     @GetMapping("/{string}/name")
@@ -79,7 +89,7 @@ public class BusinessController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Business> update(@PathVariable @NotNull UUID id, @RequestBody CreateBusinessInput business) {
+    public ResponseEntity<Business> update(@PathVariable @NotNull UUID id, @RequestBody @Valid CreateBusinessInput business) {
         return ResponseEntity.ok(businessUseCases.updateById(id, business));
     }
 

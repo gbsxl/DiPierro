@@ -1,5 +1,6 @@
 package Di.Pierro.presentation.association;
 
+import Di.Pierro.application.dto.association.AssociationFilter;
 import Di.Pierro.application.dto.association.CreateAssociationInput;
 import Di.Pierro.application.port.input.AssociationUseCases;
 import Di.Pierro.domain.model.Association;
@@ -39,6 +40,16 @@ public class AssociationController {
     @GetMapping
     public ResponseEntity<List<Association>> findAll() {
         return ResponseEntity.ok(associationUseCases.findAll());
+    }
+
+    @PostMapping("/batch/ids")
+    public ResponseEntity<List<Association>> findAllByIds(@RequestBody List<UUID> ids) {
+        return ResponseEntity.ok(associationUseCases.findAllByIds(ids));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Association>> findByFilter(@Valid @ModelAttribute AssociationFilter filter) {
+        return ResponseEntity.ok(associationUseCases.findByFilter(filter));
     }
 
     @GetMapping("/{actorId}/actorId")

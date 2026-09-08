@@ -49,12 +49,24 @@ public class PersonController {
         return ResponseEntity.ok(personUseCases.findAll());
     }
 
+    @PostMapping("/batch/ids")
+    public ResponseEntity<List<Person>> findAllByIds(@RequestBody List<UUID> ids) {
+        log.debug("Fetching persons by batch ids count={}", ids.size());
+        return ResponseEntity.ok(personUseCases.findAllByIds(ids));
+    }
+
     @GetMapping("/{actorId}/actorId")
     public ResponseEntity<Person> findByActorId(@PathVariable @NotNull UUID actorId) {
         log.debug("Finding person by actorId={}", actorId);
         return personUseCases.findByActorId(actorId)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> ResourceNotFoundException.of("person.not-found", "Person", actorId));
+    }
+
+    @PostMapping("/batch/actor-ids")
+    public ResponseEntity<List<Person>> findByActorIds(@RequestBody List<UUID> actorIds) {
+        log.debug("Fetching persons by batch actorIds count={}", actorIds.size());
+        return ResponseEntity.ok(personUseCases.findByActorIds(actorIds));
     }
 
     @GetMapping("/{string}/completeName")

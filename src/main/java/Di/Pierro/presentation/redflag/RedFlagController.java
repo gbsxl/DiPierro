@@ -45,6 +45,11 @@ public class RedFlagController {
         return ResponseEntity.ok(redFlagUseCases.findByActorId(actorId));
     }
 
+    @PostMapping("/actorIds")
+    public ResponseEntity<List<RedFlag>> findByActorIds(@RequestBody List<UUID> actorIds) {
+        return ResponseEntity.ok(redFlagUseCases.findByActorIds(actorIds));
+    }
+
     @GetMapping("/{publicProcurementId}/publicProcurementId")
     public ResponseEntity<List<RedFlag>> findByPublicProcurementId(@PathVariable @NotNull UUID publicProcurementId) {
         return ResponseEntity.ok(redFlagUseCases.findByPublicProcurementId(publicProcurementId));

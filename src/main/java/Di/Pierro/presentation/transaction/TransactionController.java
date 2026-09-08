@@ -42,6 +42,11 @@ public class TransactionController {
         return ResponseEntity.ok(transactionUseCases.findAll());
     }
 
+    @PostMapping("/batch/ids")
+    public ResponseEntity<List<Transaction>> findAllByIds(@RequestBody List<UUID> ids) {
+        return ResponseEntity.ok(transactionUseCases.findAllByIds(ids));
+    }
+
 
     @GetMapping("/filter")
     public ResponseEntity<List<Transaction>> findByFilter(@Valid @ModelAttribute TransactionFilter filter) {

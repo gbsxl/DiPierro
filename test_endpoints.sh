@@ -113,7 +113,15 @@ CPF_UNIQUE=$(printf '%011d' "$RUN_ID")
 STATUS=$(post "$BASE_URL/person" "{
   \"completeName\": \"João da Silva $RUN_ID\",
   \"cpf\": \"$CPF_UNIQUE\",
-  \"address\": \"Rua das Flores, 123\",
+  \"address\": {
+    \"postalCode\": \"01310100\",
+    \"streetAddress\": \"Rua das Flores\",
+    \"number\": \"123\",
+    \"complement\": \"Apto 1\",
+    \"neighborhood\": \"Centro\",
+    \"city\": \"São Paulo\",
+    \"state\": \"SP\"
+  },
   \"gender\": \"MALE\",
   \"phoneNumber\": \"11999999999\",
   \"email\": \"joao${RUN_ID}@email.com\",
@@ -146,7 +154,15 @@ STATUS=$(post "$BASE_URL/business" "{
   \"phoneNumber\": \"11888888888\",
   \"email\": \"contato@tech.com\",
   \"isPublicCompany\": false,
-  \"address\": \"Avenida Paulista, 1000\",
+  \"address\": {
+    \"postalCode\": \"01310100\",
+    \"streetAddress\": \"Avenida Paulista\",
+    \"number\": \"1000\",
+    \"complement\": \"Conj 101\",
+    \"neighborhood\": \"Bela Vista\",
+    \"city\": \"São Paulo\",
+    \"state\": \"SP\"
+  },
   \"capitalStock\": 500000.00,
   \"estimatedNetWorth\": 1200000.00,
   \"actorId\": \"$ACTOR2_ID\"
