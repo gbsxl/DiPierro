@@ -12,7 +12,8 @@ public class PublicProcurementInvestigationContext {
     private List<Person> allPersonList = new ArrayList<>();
     private List<Association> associationList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
-    private List<Asset> assetList = new ArrayList<>();
+    private Map<UUID, List<Asset>> personAssets = new HashMap<>();
+    private Map<UUID, List<ActorIndicator>> personActorIndicators = new HashMap<>();
     private List<ActorIndicator> indicatorList = new ArrayList<>();
     private List<RedFlag> redFlags = new ArrayList<>();
 
@@ -180,6 +181,14 @@ public class PublicProcurementInvestigationContext {
 
     public void setTransactionGraphIntersection(TransactionGraph transactionGraph) {
         this.transactionGraphIntersection = transactionGraph;
+    }
+
+    public Map<UUID, List<ActorIndicator>> getPersonActorIndicators() {
+        return personActorIndicators;
+    }
+
+    public void setPersonActorIndicators(Map<UUID, List<ActorIndicator>> personActorIndicators) {
+        this.personActorIndicators = personActorIndicators;
     }
 
     public List<TransactionItemBySide> getGovernmentTransactionsList() {
@@ -470,12 +479,12 @@ public class PublicProcurementInvestigationContext {
         this.transactionList = transactionList;
     }
 
-    public List<Asset> getAssetList() {
-        return assetList;
+    public Map<UUID, List<Asset>> getPersonAssets() {
+        return personAssets;
     }
 
-    public void setAssetList(List<Asset> assetList) {
-        this.assetList = assetList;
+    public void setPersonAssets(Map<UUID, List<Asset>> personAssets) {
+        this.personAssets = personAssets;
     }
 
     public List<ActorIndicator> getIndicatorList() {

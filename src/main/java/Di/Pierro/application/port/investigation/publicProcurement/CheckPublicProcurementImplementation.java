@@ -8,6 +8,7 @@ import Di.Pierro.application.port.investigation.publicProcurement.model.*;
 import Di.Pierro.domain.model.RedFlag;
 import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,24 +20,20 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
     private final PersonDataFetcher personDataFetcher;
     private final AssociationDataFetcher associationDataFetcher;
     private final TransactionDataFetcher transactionDataFetcher;
+    private final AssetDataFetcher assetDataFetcher;
+    private final ActorIndicatorsDataFetcher actorIndicatorsDataFetcher;
     private final BusinessAnalyzer businessAnalyzer;
     private final PersonAnalyzer personAnalyzer;
     private final TransactionAnalyzer transactionAnalyzer;
 
-    public CheckPublicProcurementImplementation(
-            PublicProcurementDataFetcher publicProcurementDataFetcher,
-            BusinessDataFetcher businessDataFetcher,
-            PersonDataFetcher personDataFetcher,
-            AssociationDataFetcher associationDataFetcher,
-            TransactionDataFetcher transactionDataFetcher,
-            BusinessAnalyzer businessAnalyzer,
-            PersonAnalyzer personAnalyzer,
-            TransactionAnalyzer transactionAnalyzer) {
+    public CheckPublicProcurementImplementation(PublicProcurementDataFetcher publicProcurementDataFetcher, BusinessDataFetcher businessDataFetcher, PersonDataFetcher personDataFetcher, AssociationDataFetcher associationDataFetcher, TransactionDataFetcher transactionDataFetcher, AssetDataFetcher assetDataFetcher, ActorIndicatorsDataFetcher actorIndicatorsDataFetcher, BusinessAnalyzer businessAnalyzer, PersonAnalyzer personAnalyzer, TransactionAnalyzer transactionAnalyzer) {
         this.publicProcurementDataFetcher = publicProcurementDataFetcher;
         this.businessDataFetcher = businessDataFetcher;
         this.personDataFetcher = personDataFetcher;
         this.associationDataFetcher = associationDataFetcher;
         this.transactionDataFetcher = transactionDataFetcher;
+        this.assetDataFetcher = assetDataFetcher;
+        this.actorIndicatorsDataFetcher = actorIndicatorsDataFetcher;
         this.businessAnalyzer = businessAnalyzer;
         this.personAnalyzer = personAnalyzer;
         this.transactionAnalyzer = transactionAnalyzer;
@@ -56,16 +53,34 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
         personDataFetcher.fetchPersonData(context);
         associationDataFetcher.fetchAllAssociations(context);
         businessDataFetcher.fetchPublicProcurementWinner(context);
+        assetDataFetcher.fetchAssets(context);
         transactionDataFetcher.fetchTransactionData(context);
+        actorIndicatorsDataFetcher.fetchActorIndicators(context);
 
         businessAnalyzer.identifyRecentCompanyRedFlag(context);
         businessAnalyzer.identifyInsufficientCapitalStockRedFlag(context);
         personAnalyzer.identifySharedQsaBetweenGovernmentAndBusiness(context);
         personAnalyzer.identifyLinkBetweenPeopleOnTheGovernmentSideAndPublicProcurementParticipants(context);
         personAnalyzer.identifyProbableFraudulentCpfUsage(context);
+        personAnalyzer.identifyFrontMans(context);
         transactionAnalyzer.identifyTransactionsBetweenPeopleOnTheGovernmentSideAndPublicProcurementParticipants(context);
 
         List<RedFlag> redFlags = context.getRedFlags();
+        InvestigationSummary summary = getSummary(redFlags);
+
+        InvestigationStatus status = redFlags.isEmpty()
+                ? InvestigationStatus.COMPLETED
+                : InvestigationStatus.COMPLETED_WITH_RED_FLAGS;
+
+        return new InvestigationResult(
+                context.getProcurement().getId(),
+                status,
+                summary,
+                redFlags
+        );
+    }
+
+    private static @NonNull InvestigationSummary getSummary(List<RedFlag> redFlags) {
         int critical = 0;
         int high = 0;
         int medium = 0;
@@ -84,23 +99,12 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
             }
         }
 
-        InvestigationSummary summary = new InvestigationSummary(
+        return new InvestigationSummary(
                 redFlags.size(),
                 critical,
                 high,
                 medium,
                 low
-        );
-
-        InvestigationStatus status = redFlags.isEmpty()
-                ? InvestigationStatus.COMPLETED
-                : InvestigationStatus.COMPLETED_WITH_RED_FLAGS;
-
-        return new InvestigationResult(
-                context.getProcurement().getId(),
-                status,
-                summary,
-                redFlags
         );
     }
 }

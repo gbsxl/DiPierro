@@ -44,6 +44,11 @@ public class AssetController {
         return ResponseEntity.ok(assetUseCases.findAllByIds(ids));
     }
 
+    @PostMapping("/batch/actor-ids")
+    public ResponseEntity<List<Asset>> findAllByActorsUUID(@RequestBody List<UUID> actorsUUID) {
+        return ResponseEntity.ok(assetUseCases.findAllByActorsUUID(actorsUUID));
+    }
+
     @GetMapping("/{string}/type")
     public ResponseEntity<List<Asset>> findByType(@PathVariable String string) {
         return ResponseEntity.ok(assetUseCases.findByType(string));

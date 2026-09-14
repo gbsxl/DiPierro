@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface JpaAssetRepository extends JpaRepository<AssetEntity, UUID> {
+    List<AssetEntity> findByPersonActorIdIn(List<UUID> actorIds);
     List<AssetEntity> findTop100ByTypeContainingIgnoreCase(String type);
     List<AssetEntity> findByStillHaveIt(boolean stillHaveIt);
 }

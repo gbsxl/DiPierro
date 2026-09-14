@@ -45,6 +45,11 @@ public class ActorIndicatorUseCasesImplementation implements ActorIndicatorUseCa
     }
 
     @Override
+    public List<ActorIndicator> findAllByActorsUUID(List<UUID> actorsUUID) {
+        return actorIndicatorRepository.findAllByActorsUUID(actorsUUID);
+    }
+
+    @Override
     public List<ActorIndicator> findByIndicatorType(String string) {
         return actorIndicatorRepository.findByIndicatorType(string);
     }

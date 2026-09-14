@@ -1,6 +1,7 @@
 package Di.Pierro.domain.model;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDate;
 import java.util.UUID;
 

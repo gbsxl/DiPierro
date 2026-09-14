@@ -3,6 +3,7 @@ package Di.Pierro.domain.model;
 import Di.Pierro.domain.enums.Gender;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.UUID;
 
 public class Person {
@@ -15,20 +16,25 @@ public class Person {
     private String email;
     private Boolean isAlive = true;
     private LocalDate deathDate;
+    private LocalDate birthDate;
     private Actor actor;
 
     public Person() {
     }
 
     public Person(String completeName, String cpf, Address address, Gender gender, String phoneNumber, String email, Actor actor) {
-        this(completeName, cpf, address, gender, phoneNumber, email, true, null, actor);
+        this(completeName, cpf, address, gender, phoneNumber, email, true, null, null, actor);
     }
 
     public Person(String completeName, String cpf, Address address, Gender gender, String phoneNumber, String email, Boolean isAlive, Actor actor) {
-        this(completeName, cpf, address, gender, phoneNumber, email, isAlive, null, actor);
+        this(completeName, cpf, address, gender, phoneNumber, email, isAlive, null, null, actor);
     }
 
     public Person(String completeName, String cpf, Address address, Gender gender, String phoneNumber, String email, Boolean isAlive, LocalDate deathDate, Actor actor) {
+        this(completeName, cpf, address, gender, phoneNumber, email, isAlive, deathDate, null, actor);
+    }
+
+    public Person(String completeName, String cpf, Address address, Gender gender, String phoneNumber, String email, Boolean isAlive, LocalDate deathDate, LocalDate birthDate, Actor actor) {
         this.id = UUID.randomUUID();
         this.completeName = completeName;
         this.cpf = cpf;
@@ -37,6 +43,7 @@ public class Person {
         this.email = email;
         this.isAlive = isAlive != null ? isAlive : true;
         this.deathDate = deathDate;
+        this.birthDate = birthDate;
         this.actor = actor;
         setAddress(address);
     }
@@ -107,6 +114,25 @@ public class Person {
 
     public void setDeathDate(LocalDate deathDate) {
         this.deathDate = deathDate;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Integer getAge() {
+        if (this.birthDate == null) {
+            return null;
+        }
+        LocalDate endDate = (this.isAlive != null && !this.isAlive && this.deathDate != null) ? this.deathDate : LocalDate.now();
+        if (this.birthDate.isAfter(endDate)) {
+            return 0;
+        }
+        return Period.between(this.birthDate, endDate).getYears();
     }
 
     public Actor getActor() {

@@ -44,6 +44,11 @@ public class ActorIndicatorController {
         return ResponseEntity.ok(actorIndicatorUseCases.findByActorId(actorId));
     }
 
+    @PostMapping("/batch/actor-ids")
+    public ResponseEntity<List<ActorIndicator>> findAllByActorsUUID(@RequestBody List<UUID> actorsUUID) {
+        return ResponseEntity.ok(actorIndicatorUseCases.findAllByActorsUUID(actorsUUID));
+    }
+
     @GetMapping("/{string}/indicatorType")
     public ResponseEntity<List<ActorIndicator>> findByIndicatorType(@PathVariable String string) {
         return ResponseEntity.ok(actorIndicatorUseCases.findByIndicatorType(string));

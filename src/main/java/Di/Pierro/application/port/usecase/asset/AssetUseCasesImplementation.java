@@ -43,6 +43,11 @@ public class AssetUseCasesImplementation implements AssetUseCases {
     }
 
     @Override
+    public List<Asset> findAllByActorsUUID(List<UUID> actorsUUID) {
+        return assetRepository.findAllByActorsUUID(actorsUUID);
+    }
+
+    @Override
     public Optional<Asset> findById(UUID id) {
         return assetRepository.findById(id);
     }

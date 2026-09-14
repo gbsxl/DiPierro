@@ -43,6 +43,9 @@ public class PersonEntity extends Actor {
     @Column(name = "death_date")
     private LocalDate deathDate;
 
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "actors_id", nullable = false, unique = true)
     private ActorEntity actor;

@@ -12,6 +12,7 @@ public interface ActorIndicatorRepository {
     Optional<ActorIndicator> findById(UUID id);
     List<ActorIndicator> findAll();
     List<ActorIndicator> findByActorId(UUID id);
+    List<ActorIndicator> findAllByActorsUUID(List<UUID> actorsUUID);
     List<ActorIndicator> findByIndicatorType(String string);
     ActorIndicator updateById(UUID id, CreateActorIndicatorInput actorIndicator);
     void deleteById(UUID id);

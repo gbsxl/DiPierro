@@ -110,4 +110,5 @@ CREATE TABLE address(
 
 ALTER TABLE people
 ADD COLUMN is_alive boolean DEFAULT true,
-ADD COLUMN death_date date;
+ADD COLUMN death_date date,
+ADD COLUMN birth_date date;

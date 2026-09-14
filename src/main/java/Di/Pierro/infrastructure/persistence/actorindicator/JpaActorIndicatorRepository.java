@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface JpaActorIndicatorRepository extends JpaRepository<ActorIndicatorEntity, UUID> {
     List<ActorIndicatorEntity> findByActorId(UUID actorId);
+    List<ActorIndicatorEntity> findByActorIdIn(List<UUID> actorIds);
     List<ActorIndicatorEntity> findTop100ByIndicatorTypeContainingIgnoreCase(String indicatorType);
 }

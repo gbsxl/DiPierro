@@ -147,6 +147,7 @@ public class JpaPersonRepositoryAdapter implements PersonRepository {
             entity.setIsAlive(person.isAlive());
         }
         entity.setDeathDate(person.deathDate());
+        entity.setBirthDate(person.birthDate());
 
         log.debug("Updating person id={}", id);
         jpaPersonRepository.save(entity);

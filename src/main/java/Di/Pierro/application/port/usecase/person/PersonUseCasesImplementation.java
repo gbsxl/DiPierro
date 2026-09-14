@@ -48,6 +48,7 @@ public class PersonUseCasesImplementation implements PersonUseCases {
                 createPersonInput.email(),
                 isAlive,
                 createPersonInput.deathDate(),
+                createPersonInput.birthDate(),
                 actor
         );
         personRepository.save(person);

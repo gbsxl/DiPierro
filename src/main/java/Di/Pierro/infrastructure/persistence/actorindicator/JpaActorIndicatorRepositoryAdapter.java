@@ -55,6 +55,13 @@ public class JpaActorIndicatorRepositoryAdapter implements ActorIndicatorReposit
     }
 
     @Override
+    public List<ActorIndicator> findAllByActorsUUID(List<UUID> actorsUUID) {
+        if (actorsUUID == null || actorsUUID.isEmpty()) return List.of();
+        log.debug("Fetching actor indicators by actorsUUID list count={}", actorsUUID.size());
+        return map(jpaActorIndicatorRepository.findByActorIdIn(actorsUUID));
+    }
+
+    @Override
     public List<ActorIndicator> findByIndicatorType(String string) {
         if (string == null || string.isBlank()) {
             return List.of();

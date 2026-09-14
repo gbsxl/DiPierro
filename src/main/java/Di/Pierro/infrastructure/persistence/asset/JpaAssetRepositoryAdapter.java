@@ -60,6 +60,13 @@ public class JpaAssetRepositoryAdapter implements AssetRepository {
     }
 
     @Override
+    public List<Asset> findAllByActorsUUID(List<UUID> actorsUUID) {
+        if (actorsUUID == null || actorsUUID.isEmpty()) return List.of();
+        log.debug("Fetching assets by actorsUUID list count={}", actorsUUID.size());
+        return map(jpaAssetRepository.findByPersonActorIdIn(actorsUUID));
+    }
+
+    @Override
     public List<Asset> findByType(String string) {
         if (string == null || string.isBlank()) {
             return List.of();
