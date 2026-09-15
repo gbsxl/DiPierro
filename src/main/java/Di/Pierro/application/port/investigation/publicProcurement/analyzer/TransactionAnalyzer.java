@@ -6,13 +6,17 @@ import Di.Pierro.application.port.input.TransactionUseCases;
 import Di.Pierro.application.port.investigation.publicProcurement.model.PublicProcurementInvestigationContext;
 import Di.Pierro.application.port.investigation.publicProcurement.model.Side;
 import Di.Pierro.application.port.investigation.publicProcurement.model.TransactionConnection;
+import Di.Pierro.application.port.investigation.publicProcurement.model.TransactionGraph;
 import Di.Pierro.domain.model.Transaction;
 
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +56,263 @@ public class TransactionAnalyzer {
             )));
         }
 
+    }
+
+    public void identifyPossibleMoneyLaundering(PublicProcurementInvestigationContext context){
+        if(context != null && context.getPublicProcurementWinner() != null){
+            checkIfWinnerQuicklyMovedALargeAmountOfMoney(context);
+        }
+    }
+
+    private void checkIfWinnerQuicklyMovedALargeAmountOfMoney(PublicProcurementInvestigationContext context){
+        if (context == null || context.getPublicProcurementWinner() == null || context.getPublicProcurementWinner().getActor() == null) {
+            return;
+        }
+        if (context.getProcurement() == null || context.getProcurement().getOpeningDate() == null || context.getProcurement().getEstimatedValue() == null) {
+            return;
+        }
+
+        UUID winnerUUID = context.getPublicProcurementWinner().getActor().getId();
+        if (winnerUUID == null) {
+            return;
+        }
+
+        TransactionGraph transactionGraphIntersection = context.getTransactionGraphIntersection();
+        if (transactionGraphIntersection == null || transactionGraphIntersection.getUuidSet() == null) {
+            return;
+        }
+
+        boolean hasWinnerTransactions = transactionGraphIntersection.getUuidSet().contains(winnerUUID);
+        if(hasWinnerTransactions){
+            Set<TransactionConnection> transactionConnectionSet = transactionGraphIntersection.getGraph().get(winnerUUID);
+            if (transactionConnectionSet == null || transactionConnectionSet.isEmpty()) {
+                return;
+            }
+
+            BigDecimal suspiciousPercentage = BigDecimal.valueOf(0.35);
+            BigDecimal publicProcurementValue = context.getProcurement().getEstimatedValue();
+            int daysBefore = 30;
+            int daysAfter = 90;
+            LocalDate openingDate = context.getProcurement().getOpeningDate();
+            LocalDate oneMonthBefore = openingDate.minusDays(daysBefore);
+            LocalDate threeMonthsAfter = openingDate.plusDays(daysAfter);
+
+            Set<Transaction> transactionsFiltered = getTransactionsBetweenDatesAndWinnerBeingSender(transactionConnectionSet, winnerUUID, oneMonthBefore, threeMonthsAfter);
+
+            if(!transactionsFiltered.isEmpty()){
+                Map<UUID, TooMoneyMovedQuickly> suspiciousTransactions = getSuspiciousTransactions(transactionsFiltered, publicProcurementValue, suspiciousPercentage);
+
+                UUID procurementActorUUID = context.getProcurement().getActor() != null ? context.getProcurement().getActor().getId() : context.getProcurement().getId();
+                if(!suspiciousTransactions.isEmpty()) createTooManyMoneyMovedRedFlags(suspiciousTransactions, openingDate, publicProcurementValue, procurementActorUUID, winnerUUID);
+            }
+        }
+    }
+
+    private void createTooManyMoneyMovedRedFlags(Map<UUID, TooMoneyMovedQuickly> suspiciousTransactions, LocalDate openingDate, BigDecimal publicProcurementValue, UUID publicProcurementUUID, UUID winnerUUID){
+
+        suspiciousTransactions.forEach((uuid, tooMoneyMovedQuickly) -> {
+            DateWithDays nearestDateAndDays = getNearestDateWithDays(tooMoneyMovedQuickly.transactions, openingDate);
+            int nearestDateSeverity = getNearestDateSeverity(nearestDateAndDays);
+            int nearestPublicProcurementValueSeverity = getNearestPublicProcurementValueSeverity(tooMoneyMovedQuickly.totalValue, publicProcurementValue);
+            boolean nearestDateSeverityIsEqualOrBiggerThanSeven = nearestDateSeverity >= 7;
+            int severity = Math.max(nearestDateSeverity, nearestPublicProcurementValueSeverity);
+            int finalSeverity = nearestDateSeverityIsEqualOrBiggerThanSeven ? severity + 1 : severity;
+
+            String description = buildTooManyMoneyMovedDescription(
+                    tooMoneyMovedQuickly.transactions,
+                    tooMoneyMovedQuickly.totalValue,
+                    publicProcurementValue,
+                    nearestDateAndDays,
+                    openingDate,
+                    finalSeverity
+            );
+
+            redFlagUseCases.createRedFlag(new CreateRedFlagInput(
+                    List.of(winnerUUID, uuid),
+                    publicProcurementUUID,
+                    null,
+                    null,
+                    "Public procurement winner quickly moved a large amount of money",
+                    finalSeverity,
+                    description
+            ));
+        });
+    }
+
+    private String buildTooManyMoneyMovedDescription(
+            Set<Transaction> transactions,
+            BigDecimal totalValue,
+            BigDecimal publicProcurementValue,
+            DateWithDays nearestDateAndDays,
+            LocalDate openingDate,
+            int finalSeverity
+    ) {
+        int transactionCount = transactions.size();
+
+        String valueText;
+        if (publicProcurementValue != null && publicProcurementValue.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal percentage = totalValue
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(publicProcurementValue, 2, RoundingMode.HALF_UP);
+            valueText = "totaling " + totalValue + " (" + percentage + "% of the public procurement estimated value of " + publicProcurementValue + ")";
+        } else {
+            valueText = "totaling " + totalValue;
+        }
+
+        long daysDiff = ChronoUnit.DAYS.between(openingDate, nearestDateAndDays.date);
+        long absDays = Math.abs(daysDiff);
+        String temporalText;
+        if (daysDiff > 0) {
+            temporalText = "occurred " + (absDays == 1 ? "1 day" : absDays + " days") + " after";
+        } else if (daysDiff < 0) {
+            temporalText = "occurred " + (absDays == 1 ? "1 day" : absDays + " days") + " before";
+        } else {
+            temporalText = "occurred on";
+        }
+
+        String severityText;
+        if (finalSeverity >= 9) {
+            severityText = "Critical concern (severity level " + finalSeverity + "/10)";
+        } else if (finalSeverity >= 7) {
+            severityText = "High concern (severity level " + finalSeverity + "/10)";
+        } else {
+            severityText = "Moderate concern (severity level " + finalSeverity + "/10)";
+        }
+
+        if (transactionCount == 1) {
+            return "The public procurement winner executed 1 transaction " + valueText + " on " + nearestDateAndDays.date + ", "
+                    + "which " + temporalText + " the public procurement opening date. "
+                    + severityText + ": rapid movement of significant funds around the procurement opening date.";
+        }
+
+        LocalDate minDate = transactions.stream().map(t -> t.getTransactionDate().toLocalDate()).min(LocalDate::compareTo).orElse(nearestDateAndDays.date);
+        LocalDate maxDate = transactions.stream().map(t -> t.getTransactionDate().toLocalDate()).max(LocalDate::compareTo).orElse(nearestDateAndDays.date);
+
+        if (minDate.equals(maxDate)) {
+            return "The public procurement winner executed " + transactionCount + " transactions " + valueText + " on " + minDate + ", "
+                    + "which " + temporalText + " the public procurement opening date. "
+                    + severityText + ": rapid movement of significant funds around the procurement opening date.";
+        }
+
+        return "The public procurement winner executed " + transactionCount + " transactions " + valueText + " between " + minDate + " and " + maxDate + ", "
+                + "where the closest transaction " + temporalText + " the public procurement opening date. "
+                + severityText + ": rapid movement of significant funds around the procurement opening date.";
+    }
+
+    private int getNearestPublicProcurementValueSeverity(BigDecimal totalValue, BigDecimal publicProcurementValue) {
+        if (publicProcurementValue == null || publicProcurementValue.compareTo(BigDecimal.ZERO) <= 0 || totalValue == null || totalValue.compareTo(BigDecimal.ZERO) <= 0) {
+            return 5;
+        }
+
+        BigDecimal totalValuePercentage = totalValue.divide(publicProcurementValue, 4, RoundingMode.HALF_UP);
+
+        BigDecimal severitySixPercentage = BigDecimal.valueOf(0.60);
+        BigDecimal severitySevenPercentage = BigDecimal.valueOf(0.85);
+        BigDecimal entireValuePercentage = BigDecimal.ONE;
+        BigDecimal severityNinePercentage = BigDecimal.valueOf(1.20);
+
+        if (totalValuePercentage.compareTo(severityNinePercentage) >= 0) {
+            return 9;
+        }
+        if (totalValuePercentage.compareTo(entireValuePercentage) >= 0) {
+            return 8;
+        }
+        if (totalValuePercentage.compareTo(severitySevenPercentage) >= 0) {
+            return 7;
+        }
+        if (totalValuePercentage.compareTo(severitySixPercentage) >= 0) {
+            return 6;
+        }
+
+        return 5;
+    }
+
+    private int getNearestDateSeverity(DateWithDays nearestDateAndDays) {
+        int severityEightDifferenceDays = 15;
+        int severitySevenDifferenceDays = 30;
+        int daysOfDifference = Math.abs(nearestDateAndDays.daysOfDifference);
+        return daysOfDifference <= severityEightDifferenceDays ? 8 :
+                        (daysOfDifference <= severitySevenDifferenceDays ? 7 : 6);
+    }
+
+    private DateWithDays getNearestDateWithDays(Set<Transaction> transactions, LocalDate openingDate) {
+        AtomicReference<Long> nearestAbsDifference = new AtomicReference<>(Long.MAX_VALUE);
+        AtomicReference<Long> nearestRawDifference = new AtomicReference<>(0L);
+        AtomicReference<LocalDate> nearestDate = new AtomicReference<>(openingDate);
+
+        transactions.forEach(transaction -> {
+            LocalDate transactionDate = transaction.getTransactionDate().toLocalDate();
+            long daysFromOpening = ChronoUnit.DAYS.between(
+                    openingDate,
+                    transactionDate
+            );
+            long absDifference = Math.abs(daysFromOpening);
+            if (absDifference < nearestAbsDifference.get()) {
+                nearestAbsDifference.set(absDifference);
+                nearestRawDifference.set(daysFromOpening);
+                nearestDate.set(transactionDate);
+            }
+        });
+        return new DateWithDays(nearestDate.get(), nearestRawDifference.get().intValue());
+    }
+
+    private Map<UUID, TooMoneyMovedQuickly> getSuspiciousTransactions(Set<Transaction> transactions, BigDecimal publicProcurementValue, BigDecimal suspiciousPercentage){
+        if (transactions == null || transactions.isEmpty() || publicProcurementValue == null || suspiciousPercentage == null) {
+            return Collections.emptyMap();
+        }
+
+        BigDecimal minimumToBeSuspicious = publicProcurementValue.multiply(suspiciousPercentage);
+        Map<UUID, TooMoneyMovedQuickly> tooMoneyMovedQuicklyMap = new HashMap<>();
+
+        Map<UUID, Set<Transaction>> transactionsByReceiver = transactions.stream()
+                .filter(t -> t != null && t.getActorReceiver() != null && t.getActorReceiver().getId() != null)
+                .collect(Collectors.groupingBy(
+                        transaction -> transaction.getActorReceiver().getId(),
+                        Collectors.toSet()
+                ));
+
+        transactionsByReceiver.forEach((receiverUUID, transactionsByRecipient) -> {
+            BigDecimal totalValue = getTotalValue(transactionsByRecipient);
+            boolean isMinimumToBeSuspicious = totalValue.compareTo(minimumToBeSuspicious) > 0;
+            if(isMinimumToBeSuspicious) tooMoneyMovedQuicklyMap.put(receiverUUID, new TooMoneyMovedQuickly(transactionsByRecipient, totalValue));
+        });
+
+        return tooMoneyMovedQuicklyMap;
+    }
+
+    private BigDecimal getTotalValue(Set<Transaction> transactions){
+        BigDecimal totalValue = BigDecimal.ZERO;
+        if (transactions == null) return totalValue;
+        for (Transaction transaction : transactions){
+            if (transaction != null && transaction.getValue() != null && transaction.getValue().compareTo(BigDecimal.ZERO) > 0) {
+                totalValue = totalValue.add(transaction.getValue());
+            }
+        }
+        return totalValue;
+    }
+
+    private Set<Transaction> getTransactionsBetweenDatesAndWinnerBeingSender(Set<TransactionConnection> transactionConnectionSet, UUID winnerUUID, LocalDate earlierDate, LocalDate laterDate) {
+        if (transactionConnectionSet == null || transactionConnectionSet.isEmpty() || winnerUUID == null || earlierDate == null || laterDate == null || laterDate.isBefore(earlierDate)) {
+            return Collections.emptySet();
+        }
+
+        List<UUID> winnerBeingSenderTransactionsUUIDs = transactionConnectionSet.stream()
+                .filter(transactionConnection -> transactionConnection.fromEntityId().equals(winnerUUID))
+                .map(TransactionConnection::transactionId)
+                .distinct()
+                .toList();
+
+        List<Transaction> winnerBeingSenderTransactions = transactionUseCases.findAllByIds(winnerBeingSenderTransactionsUUIDs)
+                .stream()
+                .distinct()
+                .toList();
+
+        return winnerBeingSenderTransactions.stream()
+                .filter(transaction -> transaction != null
+                        && transaction.getTransactionDate() != null
+                        && !transaction.getTransactionDate().toLocalDate().isBefore(earlierDate)
+                        && !transaction.getTransactionDate().toLocalDate().isAfter(laterDate))
+                .collect(Collectors.toSet());
     }
 
     private Set<TransactionConnection> getTransactionsForIntersectionUUIDs(PublicProcurementInvestigationContext context) {
@@ -101,6 +362,7 @@ public class TransactionAnalyzer {
         }
         return redFlagTransactions;
     }
+
     private boolean hasDiscoveredUUID(TransactionConnection connection, Set<UUID> uuidDiscovered){
         boolean containsSender = hasUUID(uuidDiscovered, connection.fromEntityId());
         boolean containsReceiver = hasUUID(uuidDiscovered, connection.toEntityId());
@@ -170,4 +432,8 @@ public class TransactionAnalyzer {
             String temporalDescription,
             int severity
     ){}
+
+    private record TooMoneyMovedQuickly(Set<Transaction> transactions, BigDecimal totalValue){}
+
+    private record DateWithDays(LocalDate date, int daysOfDifference){}
 }

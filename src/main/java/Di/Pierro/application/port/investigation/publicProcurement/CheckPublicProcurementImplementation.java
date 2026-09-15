@@ -64,6 +64,7 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
         personAnalyzer.identifyProbableFraudulentCpfUsage(context);
         personAnalyzer.identifyFrontMans(context);
         transactionAnalyzer.identifyTransactionsBetweenPeopleOnTheGovernmentSideAndPublicProcurementParticipants(context);
+        transactionAnalyzer.identifyPossibleMoneyLaundering(context);
 
         List<RedFlag> redFlags = context.getRedFlags();
         InvestigationSummary summary = getSummary(redFlags);

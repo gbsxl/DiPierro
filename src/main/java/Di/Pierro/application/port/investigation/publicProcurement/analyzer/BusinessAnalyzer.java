@@ -1,7 +1,6 @@
 package Di.Pierro.application.port.investigation.publicProcurement.analyzer;
 
 import Di.Pierro.application.dto.redflag.CreateRedFlagInput;
-import Di.Pierro.application.port.input.BusinessUseCases;
 import Di.Pierro.application.port.input.RedFlagUseCases;
 import Di.Pierro.application.port.investigation.publicProcurement.model.PublicProcurementInvestigationContext;
 import Di.Pierro.domain.model.Business;
@@ -15,11 +14,9 @@ import java.util.List;
 
 @Component
 public class BusinessAnalyzer {
-    private final BusinessUseCases businessUseCases;
     private final RedFlagUseCases redFlagUseCases;
 
-    public BusinessAnalyzer(BusinessUseCases businessUseCases, RedFlagUseCases redFlagUseCases) {
-        this.businessUseCases = businessUseCases;
+    public BusinessAnalyzer(RedFlagUseCases redFlagUseCases) {
         this.redFlagUseCases = redFlagUseCases;
     }
 
@@ -44,10 +41,6 @@ public class BusinessAnalyzer {
                 context.getRedFlags().add(redFlag);
             }
         }
-    }
-
-    public void identifyRecentlyCompanyRedFlag(PublicProcurementInvestigationContext context) {
-        identifyRecentCompanyRedFlag(context);
     }
 
     public void identifyInsufficientCapitalStockRedFlag(PublicProcurementInvestigationContext context){
@@ -79,10 +72,4 @@ public class BusinessAnalyzer {
             context.getRedFlags().add(redFlag);
         }
     }
-
-    public void identifyCapitalStockSmallerPublicProcurementContractValue(PublicProcurementInvestigationContext context) {
-        identifyInsufficientCapitalStockRedFlag(context);
-    }
-
-
 }
