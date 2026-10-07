@@ -1,6 +1,7 @@
 package Di.Pierro.application.dto.business;
 
 import Di.Pierro.application.dto.address.CreateAddressInput;
+import Di.Pierro.application.validators.cnpj.CNPJ;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,7 @@ public record CreateBusinessInput(
 
         @NotNull
         @NotBlank
+        @CNPJ
         @Size(min = 14, max = 14)
         String cnpj,
 
