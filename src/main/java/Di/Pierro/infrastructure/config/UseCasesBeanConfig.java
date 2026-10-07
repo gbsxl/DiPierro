@@ -13,6 +13,7 @@ import Di.Pierro.application.port.usecase.person.PersonUseCasesImplementation;
 import Di.Pierro.application.port.usecase.publicprocurement.PublicProcurementUseCasesImplementation;
 import Di.Pierro.application.port.usecase.redflag.RedFlagUseCasesImplementation;
 import Di.Pierro.application.port.usecase.transaction.TransactionUseCasesImplementation;
+import Di.Pierro.application.validator.association.AssociationDomainValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,8 +25,20 @@ public class UseCasesBeanConfig {
     }
 
     @Bean
-    public AssociationUseCasesImplementation associationUseCasesImplementation(AssociationRepository associationRepository) {
-        return new AssociationUseCasesImplementation(associationRepository);
+    public AssociationUseCasesImplementation associationUseCasesImplementation(
+            AssociationRepository associationRepository,
+            PersonUseCasesImplementation personUseCasesImplementation,
+            BusinessUseCasesImplementation businessUseCasesImplementation,
+            PublicProcurementUseCasesImplementation publicProcurementUseCasesImplementation,
+            AssociationDomainValidator associationDomainValidator
+    ) {
+        return new AssociationUseCasesImplementation(
+                associationRepository,
+                personUseCasesImplementation,
+                businessUseCasesImplementation,
+                publicProcurementUseCasesImplementation,
+                associationDomainValidator
+        );
     }
 
     @Bean

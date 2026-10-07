@@ -15,6 +15,19 @@ import java.util.stream.Collectors;
 
 @Component
 public class PersonDataFetcher {
+    public static final List<AssociationType> QSA_ASSOCIATION_TYPES = List.of(
+            AssociationType.SOCIO,
+            AssociationType.SOCIO_ADMINISTRADOR,
+            AssociationType.DIRETOR,
+            AssociationType.CONSELHEIRO,
+            AssociationType.ADMINISTRADOR,
+            AssociationType.PROPRIETARIO,
+            AssociationType.ACIONISTA,
+            AssociationType.EMPREGADOR,
+            AssociationType.REPRESENTANTE_LEGAL,
+            AssociationType.GERENTE
+    );
+
     private final AssociationUseCases associationUseCases;
     private final PersonUseCases personUseCases;
     private final BusinessUseCases businessUseCases;
@@ -26,10 +39,11 @@ public class PersonDataFetcher {
     }
 
     public void fetchPersonData(PublicProcurementInvestigationContext context) {
+        setAllBusinessQSA(context);
         UUID publicProcurementActorId = context.getProcurement().getActor().getId();
 
-        List<Person> classifiedBusinessPersonByQsa = getQsaPersonListByBusinessList(context.getAllBusinessList());
-        List<Person> classifiedGovernmentSeed = fetchGovernmentSeedPersons(publicProcurementActorId);
+        List<Person> classifiedBusinessPersonByQsa = getQsaPersonListByBusinessList(context.getBusinessSide());
+        List<Person> classifiedGovernmentSeed = fetchGovernmentSeedPersons(publicProcurementActorId, context.getGovernmentSide());
 
         context.addGovernmentPersons(classifiedGovernmentSeed, 0);
         context.addBusinessPersons(classifiedBusinessPersonByQsa, 0);
@@ -40,7 +54,6 @@ public class PersonDataFetcher {
         fetchHopTwo(context);
         fetchHopThree(context);
         setPersonGraphIntersection(context);
-        setAllBusinessQSA(context);
     }
 
     public void setPersonGraphIntersection(PublicProcurementInvestigationContext context) {
@@ -76,8 +89,8 @@ public class PersonDataFetcher {
         List<Person> businessPersons = processHopForGraph(context.getBusinessPersonGraph(), targetHop, context.getAllBusinessList());
         List<Person> governmentPersons = processHopForGraph(context.getGovernmentPersonGraph(), targetHop, context.getAllBusinessList());
 
-        context.addBusinessPersons(businessPersons, targetHop);
-        context.addGovernmentPersons(governmentPersons, targetHop);
+        context.addBusinessPersons(businessPersons.stream().distinct().toList(), targetHop);
+        context.addGovernmentPersons(governmentPersons.stream().distinct().toList(), targetHop);
     }
 
     public void fetchHopOne(PublicProcurementInvestigationContext context) {
@@ -136,11 +149,11 @@ public class PersonDataFetcher {
             return Collections.emptyList();
         }
 
-        List<Person> foundPersonsList = personUseCases.findAllByIds(new ArrayList<>(targetActorIds));
+        List<Person> foundPersonsList = personUseCases.findByActorIds(new ArrayList<>(targetActorIds));
         Set<UUID> foundPersonIds = foundPersonsList.stream()
                 .map(p -> p.getActor().getId()).collect(Collectors.toSet());
 
-        List<Business> foundBusiness = businessUseCases.findAllByIds(new ArrayList<>(targetActorIds));
+        List<Business> foundBusiness = businessUseCases.findByActorIds(new ArrayList<>(targetActorIds));
         businessList.addAll(foundBusiness);
 
         Set<UUID> foundBusinessIds = foundBusiness
@@ -200,7 +213,7 @@ public class PersonDataFetcher {
             candidatePersonIds.removeAll(existingActorIdsInGraph);
 
             if (!candidatePersonIds.isEmpty()) {
-                List<Person> businessPersonsList = personUseCases.findAllByIds(new ArrayList<>(candidatePersonIds));
+                List<Person> businessPersonsList = personUseCases.findByActorIds(new ArrayList<>(candidatePersonIds));
                 Set<UUID> confirmedPersonIds = businessPersonsList.stream()
                         .map(p -> p.getActor().getId()).collect(Collectors.toSet());
 
@@ -238,7 +251,7 @@ public class PersonDataFetcher {
             }
         }
 
-        return personUseCases.findAllByIds(new ArrayList<>(newlyAddedPersonIds));
+        return personUseCases.findByActorIds(new ArrayList<>(newlyAddedPersonIds));
     }
 
     private Long generateUniqueId() {
@@ -274,7 +287,7 @@ public class PersonDataFetcher {
         governmentPersonGraphItemList.forEach(personGraphItem -> context.getGovernmentPersonGraph().addItem(personGraphItem));
     }
 
-    private List<Person> fetchGovernmentSeedPersons(UUID publicProcurementActorId){
+    private List<Person> fetchGovernmentSeedPersons(UUID publicProcurementActorId, List<Business> governmentSide){
         List<AssociationType> associationTypeList = List.of(
                 AssociationType.AUTOR_ETP,
                 AssociationType.AUTOR_TR,
@@ -284,10 +297,43 @@ public class PersonDataFetcher {
                 AssociationType.PROCURADOR_JURIDICO,
                 AssociationType.AUTORIDADE_DESIGNANTE
         );
+        List<UUID> uuidGovernmentBusinessList = getUUIDBusinessList(governmentSide);
+        List<UUID> uuidList = new ArrayList<>(getUuids(publicProcurementActorId, associationTypeList));
+        uuidList.addAll(uuidGovernmentBusinessList);
 
-        List<UUID> uuidList = getUuids(publicProcurementActorId, associationTypeList);
+        return personUseCases.findByActorIds(uuidList);
+    }
 
-        return personUseCases.findAllByIds(uuidList);
+    private List<UUID> getUUIDBusinessList(List<Business> governmentSide) {
+        if (governmentSide == null || governmentSide.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<UUID> uuidList = governmentSide.stream().map(business -> business.getActor().getId()).toList();
+
+        List<Association> associations = associationUseCases.findByFilter(new AssociationFilter(
+                null, null, null, null, null, uuidList
+                , null, QSA_ASSOCIATION_TYPES, null, null, null,
+                null, null, null, null, null, null
+        ));
+
+        List<UUID> uuidPersonList = new ArrayList<>();
+
+        for(Association association : associations){
+            uuidPersonList.add(
+                    isInUUIDList(association.getFirstActor().getId(), uuidList) ?
+                            association.getSecondActor().getId() :
+                            association.getFirstActor().getId()
+            );
+        }
+        return uuidPersonList.stream().distinct().toList();
+    }
+
+    private boolean isInUUIDList(UUID uuid, List<UUID> uuidList){
+        for(UUID uuidItem : uuidList){
+            if(uuid.equals(uuidItem)) return true;
+        }
+        return false;
     }
 
     public List<Person> getQsaPersonListByBusinessList(List<Business> businessList) {
@@ -296,18 +342,12 @@ public class PersonDataFetcher {
         }
 
         List<UUID> businessActorIds = businessList.stream().map(b -> b.getActor().getId()).toList();
-        List<AssociationType> qsaAssociationTypes = List.of(
-                AssociationType.SOCIO,
-                AssociationType.SOCIO_ADMINISTRADOR,
-                AssociationType.DIRETOR,
-                AssociationType.CONSELHEIRO
-        );
 
         AssociationFilter associationFilter = new AssociationFilter(
                 null, null, null, null, null,
                 businessActorIds,
                 null,
-                qsaAssociationTypes,
+                QSA_ASSOCIATION_TYPES,
                 null, null, null, null, null, null, null, null, null
         );
 
@@ -319,7 +359,7 @@ public class PersonDataFetcher {
                         : assoc.getFirstActor().getId())
                 .collect(Collectors.toSet());
 
-        return personUseCases.findAllByIds(new ArrayList<>(personActorIds));
+        return personUseCases.findByActorIds(new ArrayList<>(personActorIds));
     }
 
     public void setAllBusinessQSA(PublicProcurementInvestigationContext context) {
@@ -329,18 +369,12 @@ public class PersonDataFetcher {
         }
 
         List<UUID> businessActorIds = businessList.stream().map(b -> b.getActor().getId()).toList();
-        List<AssociationType> qsaAssociationTypes = List.of(
-                AssociationType.SOCIO,
-                AssociationType.SOCIO_ADMINISTRADOR,
-                AssociationType.DIRETOR,
-                AssociationType.CONSELHEIRO
-        );
 
         AssociationFilter associationFilter = new AssociationFilter(
                 null, null, null, null, null,
                 businessActorIds,
                 null,
-                qsaAssociationTypes,
+                QSA_ASSOCIATION_TYPES,
                 null, null, null, null, null, null, null, null, null
         );
 
@@ -351,7 +385,7 @@ public class PersonDataFetcher {
                         : assoc.getFirstActor().getId())
                 .collect(Collectors.toSet());
 
-        Map<UUID, Person> personMap = personUseCases.findAllByIds(new ArrayList<>(allPersonIds)).stream()
+        Map<UUID, Person> personMap = personUseCases.findByActorIds(new ArrayList<>(allPersonIds)).stream()
                 .collect(Collectors.toMap(p -> p.getActor().getId(), p -> p, (a, b) -> a));
 
         Map<UUID, List<Person>> qsaPersonsByBusinessActorId = new HashMap<>();

@@ -10,8 +10,10 @@ import Di.Pierro.infrastructure.exception.custom.ResourceNotFoundException;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Component
 public class BusinessDataFetcher {
@@ -25,19 +27,36 @@ public class BusinessDataFetcher {
 
     public void getBusinessSeed(PublicProcurementInvestigationContext context){
         UUID publicProcurementActorId = context.getProcurement().getActor().getId();
-        List<Business> classifiedParticipatingBusiness = getClassifyParticipatingBusiness(publicProcurementActorId);
+        List<Business> businessSide = getBusinessSide(publicProcurementActorId);
+        List<Business> governmentSide = getGovernmentSide(publicProcurementActorId);
+        List<Business> allBusinessList = new ArrayList<>(businessSide);
+        allBusinessList.addAll(governmentSide);
 
-        context.setAllBusinessList(classifiedParticipatingBusiness);
+        context.setBusinessSide(businessSide);
+        context.setGovernmentSide(governmentSide);
+        context.setAllBusinessList(allBusinessList);
     }
 
-    private List<Business> getClassifyParticipatingBusiness(UUID publicProcurementActorId){
+    private List<Business> getBusinessSide(UUID publicProcurementActorId){
         List<AssociationType> associationTypeList = List.of(
-                AssociationType.VENCEDOR_LICITACAO,
-                AssociationType.PARTICIPOU_LICITACAO
+                AssociationType.PARTICIPOU_LICITACAO,
+                AssociationType.PARTICIPANTE_LICITACAO,
+                AssociationType.VENCEDOR_LICITACAO
         );
+        return getClassifyParticipatingBusiness(publicProcurementActorId, associationTypeList);
+    }
 
+    private List<Business> getGovernmentSide(UUID publicProcurementActorId){
+        List<AssociationType> associationTypeList = List.of(
+                AssociationType.CONTRATANTE_LICITACAO
+        );
+        return getClassifyParticipatingBusiness(publicProcurementActorId, associationTypeList);
+    }
+
+
+    private List<Business> getClassifyParticipatingBusiness(UUID publicProcurementActorId, List<AssociationType> associationTypeList){
         List<UUID> uuidList = getUuids(publicProcurementActorId, associationTypeList);
-        return businessUseCases.findAllByIds(uuidList);
+        return businessUseCases.findByActorIds(uuidList);
     }
 
     private List<UUID> getUuids(UUID publicProcurementActorId, List<AssociationType> associationTypeList) {

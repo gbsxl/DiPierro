@@ -1,8 +1,7 @@
 package Di.Pierro.application.dto.association;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.Constraint;
+import jakarta.validation.constraints.*;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -14,6 +13,8 @@ public record CreateAssociationInput(
 
     String source,
 
+    @Min(0)
+    @Max(10)
     int confidenceLevel,
 
     boolean associationEnded,

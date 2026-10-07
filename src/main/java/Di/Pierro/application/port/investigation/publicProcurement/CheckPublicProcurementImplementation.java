@@ -50,6 +50,7 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
         }
 
         businessDataFetcher.getBusinessSeed(context);
+        businessAnalyzer.identifyInsufficientCapitalStockRedFlag(context);
         personDataFetcher.fetchPersonData(context);
         associationDataFetcher.fetchAllAssociations(context);
         businessDataFetcher.fetchPublicProcurementWinner(context);
@@ -58,13 +59,12 @@ public class CheckPublicProcurementImplementation implements CheckPublicProcurem
         actorIndicatorsDataFetcher.fetchActorIndicators(context);
 
         businessAnalyzer.identifyRecentCompanyRedFlag(context);
-        businessAnalyzer.identifyInsufficientCapitalStockRedFlag(context);
         personAnalyzer.identifySharedQsaBetweenGovernmentAndBusiness(context);
         personAnalyzer.identifyLinkBetweenPeopleOnTheGovernmentSideAndPublicProcurementParticipants(context);
         personAnalyzer.identifyProbableFraudulentCpfUsage(context);
         personAnalyzer.identifyFrontMans(context);
         transactionAnalyzer.identifyTransactionsBetweenPeopleOnTheGovernmentSideAndPublicProcurementParticipants(context);
-        transactionAnalyzer.identifyPossibleMoneyLaundering(context);
+        transactionAnalyzer.identifyWinnerFinancialPatterns(context);
 
         List<RedFlag> redFlags = context.getRedFlags();
         InvestigationSummary summary = getSummary(redFlags);

@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,6 +43,8 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
     public RedFlag save(RedFlag redFlag, List<UUID> actorIds, UUID publicProcurementId) {
         if (actorIds != null && !actorIds.isEmpty()) {
             List<Actor> actors = actorIds.stream()
+                    .filter(Objects::nonNull)
+                    .distinct()
                     .map(actorRepository::findById)
                     .flatMap(Optional::stream)
                     .toList();
@@ -160,6 +163,8 @@ public class JpaRedFlagRepositoryAdapter implements RedFlagRepository {
 
         if (redFlag.actorIds() != null) {
             List<ActorEntity> actorEntities = redFlag.actorIds().stream()
+                    .filter(Objects::nonNull)
+                    .distinct()
                     .map(actorRepository::findById)
                     .flatMap(Optional::stream)
                     .map(actorMapper::toEntity)

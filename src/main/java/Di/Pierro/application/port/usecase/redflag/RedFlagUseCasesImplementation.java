@@ -7,6 +7,7 @@ import Di.Pierro.application.port.output.RedFlagRepository;
 import Di.Pierro.domain.model.RedFlag;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +29,10 @@ public class RedFlagUseCasesImplementation implements RedFlagUseCases {
                 createRedFlagInput.transactionId(),
                 createRedFlagInput.associationId()
         );
-        return redFlagRepository.save(redFlag, createRedFlagInput.actorIds(), createRedFlagInput.publicProcurementId());
+        List<UUID> actorIds = createRedFlagInput.actorIds() != null
+                ? createRedFlagInput.actorIds().stream().filter(Objects::nonNull).distinct().toList()
+                : null;
+        return redFlagRepository.save(redFlag, actorIds, createRedFlagInput.publicProcurementId());
     }
 
     @Override

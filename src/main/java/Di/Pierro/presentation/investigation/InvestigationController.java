@@ -17,9 +17,9 @@ public class InvestigationController {
         this.checkPublicProcurementUseCase = checkPublicProcurementUseCase;
     }
 
-    @PostMapping("/public-procurement/{id}")
-    public ResponseEntity<InvestigationResult> publicProcurementInvestigation(@PathVariable("id") String id) {
-        InvestigationResult result = checkPublicProcurementUseCase.investigatePublicProcurement(id);
+    @PostMapping("/public-procurement/{number}")
+    public ResponseEntity<InvestigationResult> publicProcurementInvestigation(@PathVariable("number") String number) {
+        InvestigationResult result = checkPublicProcurementUseCase.investigatePublicProcurement(number);
         return ResponseEntity.ok(result);
     }
 }

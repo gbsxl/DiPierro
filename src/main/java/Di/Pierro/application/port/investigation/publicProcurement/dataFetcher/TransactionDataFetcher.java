@@ -45,15 +45,17 @@ public class TransactionDataFetcher {
     private void getAllTransaction(PublicProcurementInvestigationContext context){
         List<UUID> uuidBusinessSideList = new ArrayList<>();
 
-        List<UUID> uuidBusinessList = context.getAllBusinessList().stream().map(business -> business.getActor().getId()).toList();
+        List<UUID> uuidBusinessList = context.getBusinessSide().stream().map(business -> business.getActor().getId()).toList();
         List<UUID> uuidPersonListBusinessSide = context.getBusinessPersonGraph().getPersonGraphItemList().stream().map(PersonGraphItem::actorId).toList();
 
+        List<UUID> uuidGovernmentBusinessList = context.getGovernmentSide().stream().map(business -> business.getActor().getId()).toList();
         List<UUID> uuidPersonListGovernmentSide = context.getGovernmentPersonGraph().getPersonGraphItemList().stream().map(PersonGraphItem::actorId).toList();
 
         uuidBusinessSideList.addAll(uuidBusinessList);
         uuidBusinessSideList.addAll(uuidPersonListBusinessSide);
 
-        List<UUID> uuidGovernmentSideList = new ArrayList<>(uuidPersonListGovernmentSide);
+        List<UUID> uuidGovernmentSideList = new ArrayList<>(uuidGovernmentBusinessList);
+        uuidGovernmentSideList.addAll(uuidPersonListGovernmentSide);
 
         getTransactionItemBySideList(uuidBusinessSideList, Side.BUSINESS, context);
         getTransactionItemBySideList(uuidGovernmentSideList, Side.GOVERNMENT, context);

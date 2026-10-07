@@ -17,19 +17,25 @@ public class CpfValidator implements ConstraintValidator<CPF, String> {
     }
 
     public boolean validatorCpf(String cpf) {
-        cpf = cpf.replaceAll("\\D", "");
+        if (cpf == null) {
+            return false;
+        }
 
-        boolean cpfHasCorrectLength = cpf.length() == 11;
-        boolean cpfIsIncompleteButRight = cpfHasCorrectLength && cpf.contains("*");
-        boolean cpfIsComplete = cpfHasCorrectLength && isNumeric(cpf) && !isRepeatedNumbers(cpf);
+        String cleanedCpf = cpf.replaceAll("[^0-9*]", "");
+
+        boolean cpfHasCorrectLength = cleanedCpf.length() == 11;
+        boolean cpfIsIncompleteButRight = cpfHasCorrectLength && cleanedCpf.contains("*");
 
         if (cpfIsIncompleteButRight) {
             return true;
         }
 
+        String numericCpf = cleanedCpf.replaceAll("\\D", "");
+        boolean cpfIsComplete = numericCpf.length() == 11 && isNumeric(numericCpf) && !isRepeatedNumbers(numericCpf);
+
         if (cpfIsComplete) {
-            List<Integer> cpfIntegersList = getNineCpfDigits(cpf);
-            List<Integer> cpfToCompare = getCpfDigits(cpf);
+            List<Integer> cpfIntegersList = getNineCpfDigits(numericCpf);
+            List<Integer> cpfToCompare = getCpfDigits(numericCpf);
 
             int firstVerificationDigit = getVerificatorDigit(cpfIntegersList, true);
             cpfIntegersList.add(firstVerificationDigit);

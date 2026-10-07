@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 public class PublicProcurementInvestigationContext {
     private PublicProcurement procurement;
     private List<Business> allBusinessList = new ArrayList<>();
+    private List<Business> businessSide = new ArrayList<>();
+    private List<Business> governmentSide = new ArrayList<>();
     private List<Person> allPersonList = new ArrayList<>();
     private List<Association> associationList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
@@ -126,7 +128,9 @@ public class PublicProcurementInvestigationContext {
     }
 
     public void addGovernmentPersons(List<Person> personList, int hop){
-        allPersonList.addAll(personList);
+        List<Person> newPersonList = new ArrayList<>(personList);
+        newPersonList.addAll(allPersonList);
+        setAllPersonList(newPersonList.stream().distinct().toList());
 
         for (Person person : personList){
             allGovernmentSidePersonList.put(person.getActor().getId(), person);
@@ -147,7 +151,9 @@ public class PublicProcurementInvestigationContext {
     }
 
     public void addBusinessPersons(List<Person> personList, int hop){
-        allPersonList.addAll(personList);
+        List<Person> newPersonList = new ArrayList<>(personList);
+        newPersonList.addAll(allPersonList);
+        setAllPersonList(newPersonList.stream().distinct().toList());
 
         for (Person person : personList){
             allBusinessSidePersonList.put(person.getActor().getId(), person);
@@ -165,6 +171,22 @@ public class PublicProcurementInvestigationContext {
         if(hop == 3){
             businessPersonHopThree.addAll(personList);
         }
+    }
+
+    public List<Business> getBusinessSide() {
+        return businessSide;
+    }
+
+    public void setBusinessSide(List<Business> businessSide) {
+        this.businessSide = businessSide;
+    }
+
+    public List<Business> getGovernmentSide() {
+        return governmentSide;
+    }
+
+    public void setGovernmentSide(List<Business> governmentSide) {
+        this.governmentSide = governmentSide;
     }
 
     public void setTransactionGraphBusiness(TransactionGraph transactionGraphBusiness) {

@@ -28,7 +28,7 @@ public record CreateBusinessInput(
         String phoneNumber,
 
         @Email
-        @Size(max = 20)
+        @Size(max = 150)
         String email,
 
         boolean isPublicCompany,

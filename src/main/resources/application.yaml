@@ -26,3 +26,5 @@ spring:
 logging:
   pattern:
     console: "%d{HH:mm:ss.SSS} [%X{traceId}] %-5level %logger{36} - %msg%n"
+server:
+  port: 9090

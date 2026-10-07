@@ -4,6 +4,7 @@ import Di.Pierro.domain.enums.Gender;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Person {
@@ -158,5 +159,18 @@ public class Person {
             }
         }
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

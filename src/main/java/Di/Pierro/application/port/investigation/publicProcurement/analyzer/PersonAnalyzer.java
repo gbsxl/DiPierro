@@ -419,14 +419,31 @@ public class PersonAnalyzer {
         List<RedFlag> redFlags = new ArrayList<>();
         Map<UUID, Business> businessMap = context.getAllBusinessList().stream()
                 .collect(Collectors.toMap(b -> b.getActor().getId(), b -> b, (a, b) -> a));
+        Map<UUID, Person> personMap = context.getAllPersonList() != null ? context.getAllPersonList().stream()
+                .collect(Collectors.toMap(p -> p.getActor().getId(), p -> p, (a, b) -> a)) : Collections.emptyMap();
 
         for (SharedQsa sharedQsa : sharedQsas){
             Business business = businessMap.get(sharedQsa.businessActorId());
             if(business != null){
-                String businessName = business.getFantasyName() != null ? business.getFantasyName() : business.getLegalName();
+                String businessName = business.getFantasyName() != null && !business.getFantasyName().isBlank()
+                        ? business.getFantasyName()
+                        : business.getLegalName();
                 List<UUID> actorIds = new ArrayList<>();
                 actorIds.add(sharedQsa.businessActorId());
                 sharedQsa.sharedQsaItemList().forEach(qsaItem -> actorIds.add(qsaItem.personActorId()));
+
+                String sharedNames = sharedQsa.sharedQsaItemList().stream()
+                        .map(qsaItem -> {
+                            Person p = personMap.get(qsaItem.personActorId());
+                            return p != null ? p.getCompleteName() : qsaItem.personActorId().toString();
+                        })
+                        .distinct()
+                        .collect(Collectors.joining(", "));
+
+                String description = "Found shared partner(s)/representative(s) [" + sharedNames + "] between business "
+                        + businessName + " and the government-linked network. Note: The government-linked network comprises public officials "
+                        + "and entities connected to them through corporate or personal ties, and does not imply that all connected individuals are government employees.";
+
                 CreateRedFlagInput input = new CreateRedFlagInput(
                         actorIds,
                         context.getProcurement() != null ? context.getProcurement().getId() : null,
@@ -434,7 +451,7 @@ public class PersonAnalyzer {
                         null,
                         "Shared QSA between Government and Business",
                         8,
-                        "Found shared partners/representatives between business " + businessName + " and government side."
+                        description
                 );
                 RedFlag redFlag = redFlagUseCases.createRedFlag(input);
                 redFlags.add(redFlag);
